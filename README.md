@@ -1,0 +1,15 @@
+positivity
+==========
+
+Build positive mindstates with this buddhist influenced android app.  An entry for http://happinessapps.com/
+
+OVERVIEW
+
+This app cultivates happiness and boosts positive mental states.  Messages are displayed through your day to aid you in focusing on positive qualities for 20 seconds.  Because of the continuity of this practice, over time you will notice your mind seeks out happiness more and more.  
+
+This technique is based on buddhist theory and meditation.  There are two main types of practice: Insight practice such as vipassana allows you to stip down reality, remove sticky bad habits, see through constricted viewpoints, and ultimately extinguish a root belief in any permanent lasting "self".  The apposing practice is the active cultivation or building up of a self, through positive mental states.  In this practice you develop true appreciation for life, whatever the circumstances, as long as deep love and gratitude.  And it can be done anytime - without thousands of hours on the cushion.
+
+Recent studies in neuroscience show that negative memories make an impression that's five times stronger than positive.  To make a positive neural connection, it actually takes around twenty seconds of continuous attention to sink in.  This is the amount of time to change your mood!  Sometimes the practice has a bigger impact than others, but like any practice - the key is consistency.  By setting up notifications when you want them to appear and by making a commitment to actually taking a break to focus on these good qualities - you will become a more positive persion!
+
+TECHNICAL DETAILS
+tbd
