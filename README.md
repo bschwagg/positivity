@@ -12,4 +12,23 @@ This technique is based on buddhist theory and meditation.  There are two main t
 Recent studies in neuroscience show that negative memories make an impression that's five times stronger than positive.  To make a positive neural connection, it actually takes around twenty seconds of continuous attention to sink in.  This is the amount of time to change your mood!  Sometimes the practice has a bigger impact than others, but like any practice - the key is consistency.  By setting up notifications when you want them to appear and by making a commitment to actually taking a break to focus on these good qualities - you will become a more positive persion!
 
 TECHNICAL DETAILS
-tbd
+Page layout
+  -> instructions/motivation (from above, with pretty picture)
+  -> settings
+    notification triggers to add: 
+      after using phone X seconds, transition to a network, specified time of day, random, morning wake-up
+    postponement time
+    intrusiveness level (tbd: toast, popup, full screen)
+    scroller to select messages, and add custom messages
+  -> leader board (tbd: if using parse to upload stats, etc.)
+  -> notification dialog
+    graphic: 20 second countdown 
+    button: "got it" (tbd needed to hold button down full time?)
+    button: "later" (delay via postponement time)
+
+TBDs:
+Background service vs scheduled alarms?
+DialogBox vs Activity?
+
+  
+  
