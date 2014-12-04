@@ -15,16 +15,16 @@ TECHNICAL DETAILS
 Page layout
   -> instructions/motivation (from above, with pretty picture)
   -> settings
-    notification triggers to add: 
-      after using phone X seconds, transition to a network, specified time of day, random, morning wake-up
-    postponement time
-    intrusiveness level (tbd: toast, popup, full screen)
-    scroller to select messages, and add custom messages
+    -notification triggers to add: 
+     - after using phone X seconds, transition to a network, specified time of day, random, morning wake-up
+    -postponement time
+    -intrusiveness level (tbd: toast, popup, full screen)
+    -scroller to select messages, and add custom messages
   -> leader board (tbd: if using parse to upload stats, etc.)
   -> notification dialog
-    graphic: 20 second countdown 
-    button: "got it" (tbd needed to hold button down full time?)
-    button: "later" (delay via postponement time)
+    -graphic: 20 second countdown 
+    -button: "got it" (tbd needed to hold button down full time?)
+    -button: "later" (delay via postponement time)
 
 TBDs:
 Background service vs scheduled alarms?
