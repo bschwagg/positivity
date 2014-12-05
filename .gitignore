@@ -3,8 +3,9 @@ Thumbs.db
 ehthumbs.db
 
 #Generated files
-bin/
-gen/
+gen/*
+bin/*
+!bin/*.apk
 
 #Java class files
 *.class
