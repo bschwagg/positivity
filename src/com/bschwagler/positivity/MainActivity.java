@@ -7,15 +7,22 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.Vector;
 
+import com.bschwagler.positivity.adapter.TabsPagerAdapter;
+
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -29,9 +36,16 @@ import android.view.View.OnClickListener;
  *	the cloud so a leader board can be displayed.
  *
  */
-public class MainActivity extends Activity implements OnClickListener{
-	final static private long ONE_SECOND = 1000;
-	final static private long TWENTY_SECONDS = ONE_SECOND * 2;
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener  {
+	
+	//Stuff for pages and tabs
+	private ViewPager viewPager;
+	private TabsPagerAdapter mAdapter;
+	private ActionBar actionBar;
+	// Tab titles
+	private String[] tabs = { "Welcome", "Settings", "Stats" /*TBD: leader board?*/ };
+
+	//Stuff for alarm and timer dialog
 	PendingIntent pi;
 	BroadcastReceiver br;
 	AlarmManager am;
@@ -42,8 +56,25 @@ public class MainActivity extends Activity implements OnClickListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		// Initialize tabs
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        actionBar = getActionBar();
+        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+ 
+        viewPager.setAdapter(mAdapter);
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);        
+ 
+        // Adding Tabs
+        for (String tab_name : tabs) {
+            actionBar.addTab(actionBar.newTab().setText(tab_name)
+                    .setTabListener(this));
+        }
+        
 		setup();
-		findViewById(R.id.the_button).setOnClickListener(this);
+		
+		//findViewById(R.id.the_button).setOnClickListener( this);
 
 		phrases = new Vector<String>();
 		InputStream inputStream = getResources().openRawResource(R.raw.phrases);
@@ -80,16 +111,32 @@ public class MainActivity extends Activity implements OnClickListener{
 		am = (AlarmManager)(this.getSystemService( Context.ALARM_SERVICE ));
 	}
 
-	@Override
-	public void onClick(View v) {
-		am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 
-				TWENTY_SECONDS, pi );
-	}
 
 	@Override
 	protected void onDestroy() {
 		am.cancel(pi);
 		unregisterReceiver(br);
 		super.onDestroy();
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		//Launch a timer example when the "Stats" tab is selected
+		if(tab.getText() == "Stats" && am != null) {
+			am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 
+					1000 /*ms*/, pi );
+		}
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
 	}
 }
