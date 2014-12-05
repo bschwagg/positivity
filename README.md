@@ -29,6 +29,7 @@ Page layout
 # TBDs:
 - Background service vs scheduled alarms?
 - DialogBox vs Activity?
+- Update to sliding Tabs (android 5.0)
 
   
   
