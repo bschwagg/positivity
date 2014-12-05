@@ -18,4 +18,5 @@ public class SettingsFragment extends Fragment {
 
 		return rootView;
 	}
+	
 }

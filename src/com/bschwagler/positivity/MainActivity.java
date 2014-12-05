@@ -22,6 +22,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.Toast;
 
 
 /**
@@ -92,7 +96,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         
 		setup();
 		
-		//findViewById(R.id.the_button).setOnClickListener( this);
+		
 
 		phrases = new Vector<String>();
 		InputStream inputStream = getResources().openRawResource(R.raw.phrases);
@@ -141,14 +145,20 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		//Launch a timer example when the "Stats" tab is selected
 		if(tab.getText() == "Stats" && am != null) {
-			am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 
-					1000 /*ms*/, pi );
+			//Toast.
 		}
 
         // show respected fragment view
         viewPager.setCurrentItem(tab.getPosition());
 	}
 
+	// Handle the button click. This callback is set from the layout, so we can access it
+	public void myButtonClickHandler(View v) 
+	{
+		am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 
+				1000 /*ms*/, pi );
+	}
+	 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
