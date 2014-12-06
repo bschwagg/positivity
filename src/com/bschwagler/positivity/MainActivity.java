@@ -145,7 +145,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		//Launch a timer example when the "Stats" tab is selected
 		if(tab.getText() == "Stats" && am != null) {
-			//Toast.
+			Toast.makeText(this.getApplicationContext(), "Come on back! Not yet implemented...", Toast.LENGTH_SHORT).show();
 		}
 
         // show respected fragment view
