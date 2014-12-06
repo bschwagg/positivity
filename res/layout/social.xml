@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:text="LEADER BOARD\n----------------------------\n#1 Frank  (100pt)\n#2 Ben (45pt)\n#3 Sue (11pt)"
+        android:text="LEADER BOARD\n----------------------------\n#1 Frank  (100pt)\n#2 Ben   (45pt)\n#3 Sue   (11pt)\n#4 Me    (2pt)"
         android:textSize="30sp" />
 
 </RelativeLayout>
