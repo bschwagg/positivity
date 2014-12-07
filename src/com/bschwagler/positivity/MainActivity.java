@@ -57,47 +57,54 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
-		// Initialize tabs
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        actionBar = getActionBar();
-        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
- 
-        viewPager.setAdapter(mAdapter);
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);        
- 
-        // Adding Tabs
-        for (String tab_name : tabs) {
-            actionBar.addTab(actionBar.newTab().setText(tab_name)
-                    .setTabListener(this));
-        }
-        
-        /**
-         * on swiping the viewpager make respective tab selected
-         * */
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-         
-            @Override
-            public void onPageSelected(int position) {
-                // on changing the page
-                // make respected tab selected
-                actionBar.setSelectedNavigationItem(position);
-            }
-         
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-            }
-         
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-            }
-        });
-        
-		setup();
-		
-		
 
+		setupTabs();
+		setupAlarmReciever();
+		setupPhrases();
+
+	}
+	
+	// Initialize tabs
+	private void setupTabs()
+	{
+		viewPager = (ViewPager) findViewById(R.id.pager);
+		actionBar = getActionBar();
+		mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+
+		viewPager.setAdapter(mAdapter);
+		actionBar.setHomeButtonEnabled(false);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);        
+
+		// Adding Tabs
+		for (String tab_name : tabs) {
+			actionBar.addTab(actionBar.newTab().setText(tab_name)
+					.setTabListener(this));
+		}
+
+		/**
+		 * on swiping the viewpager make respective tab selected
+		 * */
+		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+			@Override
+			public void onPageSelected(int position) {
+				// on changing the page
+				// make respected tab selected
+				actionBar.setSelectedNavigationItem(position);
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+			}
+		});
+	}
+
+	private void setupPhrases()
+	{
 		phrases = new Vector<String>();
 		InputStream inputStream = getResources().openRawResource(R.raw.phrases);
 		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
@@ -111,11 +118,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		phraseDialog = new PhraseDialog();
 	}
 
-	private void setup() {
+	private void setupAlarmReciever() {
 		br = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context c, Intent i) {
@@ -148,8 +155,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			Toast.makeText(this.getApplicationContext(), "Come on back! Not yet implemented...", Toast.LENGTH_SHORT).show();
 		}
 
-        // show respected fragment view
-        viewPager.setCurrentItem(tab.getPosition());
+		// show respected fragment view
+		viewPager.setCurrentItem(tab.getPosition());
 	}
 
 	// Handle the button click. This callback is set from the layout, so we can access it
@@ -158,16 +165,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 
 				1000 /*ms*/, pi );
 	}
-	 
+
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
+
 }
