@@ -5,21 +5,72 @@
     android:background="#0a0a3b"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="fill_parent"
+    <CheckBox
+        android:id="@+id/alarm_time"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="Press the button to start an alarm..." />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="23dp"
+        android:text="Daily time" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Notification Times"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/text_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/alarm_time"
+        android:layout_alignBottom="@+id/alarm_time"
+        android:layout_toRightOf="@+id/TextView01" />
+
+    <CheckBox
+        android:id="@+id/alarm_random"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/text_time"
+        android:text="Random times" />
+
+    <CheckBox
+        android:id="@+id/alarm_wakeup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/alarm_random"
+        android:text="First use after wake-up" />
+
+    <CheckBox
+        android:id="@+id/alarm_minutes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/alarm_wakeup"
+        android:text="After minutes on phone" />
+
+    <CheckBox
+        android:id="@+id/alarm_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/alarm_minutes"
+        android:text="Location" />
 
     <Button
         android:id="@+id/the_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_centerHorizontal="true"
+        android:layout_alignRight="@+id/TextView01"
+        android:layout_below="@+id/alarm_location"
+        android:layout_marginTop="83dp"
         android:onClick="myButtonClickHandler"
-        android:text="Launch Alarm" />
+        android:text="Test Message" />
 
 </RelativeLayout>
