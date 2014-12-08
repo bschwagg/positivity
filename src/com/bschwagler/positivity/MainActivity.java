@@ -1,12 +1,5 @@
 package com.bschwagler.positivity;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.Vector;
-
 import com.bschwagler.positivity.adapter.TabsPagerAdapter;
 
 import android.os.Bundle;
@@ -23,8 +16,6 @@ import android.content.IntentFilter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -113,14 +104,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		br = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context c, Intent i) {
-				Toast.makeText(c, "Starting bg activity..", Toast.LENGTH_SHORT).show();
 				startActivity( bgIntent ); //kick off the background activity
 			}
 		};
-		registerReceiver(br, new IntentFilter("com.brad.wakeup") );
-		pi = PendingIntent.getBroadcast( this, 0, new Intent("com.brad.wakeup"),
-				0 );
-		am = (AlarmManager)(this.getSystemService( Context.ALARM_SERVICE ));
+		registerReceiver(br, new IntentFilter("com.bschwagler.wakeup") );
+		
 	}
 
 
@@ -145,7 +133,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	// Handle the button click. This callback is set from the layout, so we can access it
 	public void myButtonClickHandler(View v) 
 	{
-		am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 2000 /*ms*/, pi );
+		//Test the dialog box in .5 seconds
+		pi = PendingIntent.getBroadcast( this, 0, new Intent("com.bschwagler.wakeup"),
+				0 );
+		am = (AlarmManager)(this.getSystemService( Context.ALARM_SERVICE ));
+		am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 500 /*ms*/, pi );
 	}
 
 	@Override

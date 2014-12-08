@@ -8,16 +8,18 @@ import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.format.DateFormat;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 public class TimePickerFragment extends DialogFragment
-implements TimePickerDialog.OnTimeSetListener {
+implements TimePickerDialog.OnTimeSetListener, TimePickerDialog.OnCancelListener {
 
 	int hour, minute;
 	PendingIntent pi;
@@ -30,7 +32,7 @@ implements TimePickerDialog.OnTimeSetListener {
 		int hour = c.get(Calendar.HOUR_OF_DAY);
 		int minute = c.get(Calendar.MINUTE);
 		
-		 pi = PendingIntent.getBroadcast( getActivity(), 1/*id*/, new Intent("com.brad.wakeup"), 0 );
+		 pi = PendingIntent.getBroadcast( getActivity(), 1/*id*/, new Intent("com.bschwagler.wakeup"), 0 );
 		 am = (AlarmManager)(getActivity().getSystemService( Context.ALARM_SERVICE ));
 
 
@@ -43,18 +45,35 @@ implements TimePickerDialog.OnTimeSetListener {
 		// Do something with the time chosen by the user
 		 TextView tv = (TextView)(getActivity().findViewById(R.id.text_time));
 		 String tod = (hourOfDaySel > 12) ? " PM":" AM";
-		 tv.setText((hourOfDaySel%12)+":"+minuteSel+ tod);
+		 String min = (minuteSel < 10) ? ("0") : "";
+		 min += minuteSel;
+		 tv.setText((hourOfDaySel%12)+":"+min+ tod);
 		 tv.setVisibility(View.VISIBLE);
 		
 		 Calendar calendar = Calendar.getInstance();
 		 calendar.set(Calendar.HOUR_OF_DAY, hourOfDaySel);
 		 calendar.set(Calendar.MINUTE, minuteSel);
 		 calendar.set(Calendar.SECOND, 0);
-
+		 calendar.set(Calendar.MILLISECOND, 0); 
+//		 calendar.add(Calendar.DAY_OF_YEAR, 1);
 
 		 am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
 				 AlarmManager.INTERVAL_DAY, pi);
 
+	}
+	
+	//Why does this onCancel listener never get called?
+	public void onCancel(DialogInterface dialog)
+	{
+		//Hide the time text
+		 TextView tv = (TextView)(getActivity().findViewById(R.id.text_time));
+		 if(tv != null)
+			 tv.setVisibility(View.INVISIBLE);
+		 
+		 //Uncheck the checkbox
+		CheckBox cb = (CheckBox)(getActivity().findViewById(R.id.alarm_time));
+		if(cb != null)
+			cb.setChecked(false);
 	}
 	
 	public void cancelAlarm()
