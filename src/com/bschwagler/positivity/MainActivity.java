@@ -50,18 +50,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	PendingIntent pi;
 	BroadcastReceiver br;
 	AlarmManager am;
-	Vector<String> phrases;
-	PhraseDialog phraseDialog;
+
+	//Stuff for message dialog box
+	Intent bgIntent;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
 		setupTabs();
 		setupAlarmReciever();
-		setupPhrases();
-
 	}
 	
 	// Initialize tabs
@@ -103,35 +103,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		});
 	}
 
-	private void setupPhrases()
-	{
-		phrases = new Vector<String>();
-		InputStream inputStream = getResources().openRawResource(R.raw.phrases);
-		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
-		String line;
-		try {
-			while((line = br.readLine()) != null){
-				System.out.println(inputStream);
-				phrases.add(line);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		phraseDialog = new PhraseDialog();
-	}
 
 	private void setupAlarmReciever() {
+		 
+		//Create an intent to open up the background activity, which contains the msg dialog
+		bgIntent = new Intent(this, BackgroundActivity.class);
+		 
+		//Setup callback for the alarm
 		br = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context c, Intent i) {
-				//Problem launching dialog from a broadcast receiver?
-				//http://stackoverflow.com/questions/4844031/alertdialog-from-within-broadcastreceiver-can-it-be-done
-				String phrase = phrases.get((int) (Math.random() * phrases.size())) ;
-				phraseDialog.setPhrase(  phrase );
-				phraseDialog.show(getFragmentManager(), phrase);
-				//Toast.makeText(c,), Toast.LENGTH_LONG).show();
+				Toast.makeText(c, "Starting bg activity..", Toast.LENGTH_SHORT).show();
+				startActivity( bgIntent ); //kick off the background activity
 			}
 		};
 		registerReceiver(br, new IntentFilter("com.brad.wakeup") );
@@ -162,8 +145,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	// Handle the button click. This callback is set from the layout, so we can access it
 	public void myButtonClickHandler(View v) 
 	{
-		am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 
-				1000 /*ms*/, pi );
+		am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 2000 /*ms*/, pi );
 	}
 
 	@Override
