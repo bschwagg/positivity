@@ -3,6 +3,8 @@ positivity
 
 Build positive mindstates with this buddhist influenced android app.  An entry for http://happinessapps.com/
 
+*(Note: This is my first attempt at an Android app, learnin' as I'm goin'... any feedback greatly appreciated!)*
+
 # OVERVIEW
 
 This app cultivates happiness and boosts positive mental states.  Messages are displayed through your day to aid you in focusing on positive qualities for 20 seconds.  Because of the continuity of this practice, over time you will notice your mind seeks out happiness more and more.  
