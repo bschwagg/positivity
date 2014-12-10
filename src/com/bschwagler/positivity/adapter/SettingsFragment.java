@@ -66,7 +66,7 @@ public class SettingsFragment extends Fragment {
 	}
 	
 	private void setupRandomAlarm(View rootView, final LayoutInflater inflater) {
-		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_random);
+		final CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_random);
 		randText = (TextView) rootView.findViewById(R.id.text_time_random);
 		numRandomAlarms = 0; //default
 		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -95,6 +95,7 @@ public class SettingsFragment extends Fragment {
 							new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							cancelRandomAlarms();
+							checkBox.setChecked(false);
 						}
 					})
 					.create();
