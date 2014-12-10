@@ -48,10 +48,42 @@ public class SettingsFragment extends Fragment {
 
 		setupDailyAlarm(rootView); //implementation nicely buried in subclass
 		setupRandomAlarm(rootView, inflater); //implementation NOT nicely buried in subclass (TODO)
-		
+		SetupWakeAlarm(rootView);
+		SetupMinsAlarm(rootView);
+		SetupLocationAlarm(rootView);
 		setupParams(rootView);
 
 		return rootView;
+	}
+
+	private void SetupLocationAlarm(View rootView) {
+		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_location);
+		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				Toast.makeText(getActivity().getApplicationContext(), "Location alarm not yet working!", Toast.LENGTH_SHORT).show();
+			}
+		});	
+	}
+
+	private void SetupMinsAlarm(View rootView) {
+		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_minutes);
+		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				Toast.makeText(getActivity().getApplicationContext(), "Minutes alarm not yet working!", Toast.LENGTH_SHORT).show();
+			}
+		});	
+	}
+
+	private void SetupWakeAlarm(View rootView) {
+		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_wakeup);
+		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				Toast.makeText(getActivity().getApplicationContext(), "Wake alarm not yet working!", Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	private void setupParams(View rootView)
