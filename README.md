@@ -29,9 +29,5 @@ Page layout
   - button: "later" (delay via postponement time)
 
 # TBDs:
-- Background service vs scheduled alarms?
-- DialogBox vs Activity?
-- Update to sliding Tabs (android 5.0)
-
-  
+Managed through issue tracking
   
