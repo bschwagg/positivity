@@ -27,15 +27,14 @@ public class BackgroundActivity extends Activity {
 	Vector<String> phrases;
 	PhraseDialog phraseDialog;
 	boolean enableVib;
-	private boolean mShowDialog = false;
-	private boolean mReturningWithResult = false;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_background);
 		setupPhrases();
-		mReturningWithResult = true;
+	
 	}
 	
 	@Override
@@ -83,48 +82,37 @@ public class BackgroundActivity extends Activity {
 	}
 	
 	@Override
+	public void onPause() {
+		super.onPause();
+		if(phraseDialog != null)
+			phraseDialog.dismiss(); //make sure we cleanly close this dialog when the activity loses focus
+	}
+	
+	@Override
 	public void onResume() {
 		super.onResume();
-	//code moved to onPostResume() due to bug!
+		//code moved to onPostResume() due to bug!
 		//Issue: https://code.google.com/p/android/issues/detail?id=23761
 		//See: http://stackoverflow.com/questions/16265733/failure-delivering-result-onactivityforresult/18345899#18345899
-		
-	}
-	
-	
+		//Problem launching dialog from a broadcast receiver?
+		//http://stackoverflow.com/questions/4844031/alertdialog-from-within-broadcastreceiver-can-it-be-done
+		if(phraseDialog != null) {
+			String phrase = phrases.get((int) (Math.random() * phrases.size())) ;
 
-	@Override
-	protected void onPostResume() {
-	    super.onPostResume();
-	    if (mReturningWithResult) {
-	    	//Problem launching dialog from a broadcast receiver?
-			//http://stackoverflow.com/questions/4844031/alertdialog-from-within-broadcastreceiver-can-it-be-done
-			if(phraseDialog != null) {
-				String phrase = phrases.get((int) (Math.random() * phrases.size())) ;
+			phraseDialog.setPhrase(  phrase );
+			phraseDialog.show(getFragmentManager(), phrase);
 
-				phraseDialog.setPhrase(  phrase );
-			    phraseDialog.show(getFragmentManager(), phrase);
-			    
-				//Toast.makeText(c,), Toast.LENGTH_LONG).show();
-				
-				// Vibrate the mobile phone
-				if(GlobalsAreBad.getInstance().vibEnabled) {
-					Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-					if(vibrator != null)
-						vibrator.vibrate(800);
-				}
+			//Toast.makeText(c,), Toast.LENGTH_LONG).show();
+
+			// Vibrate the mobile phone
+			if(GlobalsAreBad.getInstance().vibEnabled) {
+				Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+				if(vibrator != null)
+					vibrator.vibrate(800);
 			}
-	    }
-	    // Reset the boolean flag back to false for next time.
-	    mReturningWithResult = false;
+		}
 	}
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data){
-	  super.onActivityResult(requestCode, resultCode, data);
-
-	  // remember that dialog should be shown
-	  mReturningWithResult = true;
-	}
+	
 	
 }
