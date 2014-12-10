@@ -14,15 +14,6 @@
         android:layout_marginTop="23dp"
         android:text="Daily time" />
 
-    <TextView
-        android:id="@+id/TextView01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="Notification Times"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <CheckBox
         android:id="@+id/alarm_random"
         android:layout_width="wrap_content"
@@ -55,16 +46,6 @@
         android:layout_below="@+id/alarm_minutes"
         android:text="Location" />
 
-    <Button
-        android:id="@+id/the_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/TextView01"
-        android:layout_below="@+id/alarm_location"
-        android:layout_marginTop="83dp"
-        android:onClick="myButtonClickHandler"
-        android:text="Test Message" />
-
     <TextView
         android:id="@+id/text_time_daily"
         android:layout_width="wrap_content"
@@ -81,12 +62,41 @@
         android:layout_alignBottom="@+id/alarm_random"
         android:layout_toRightOf="@+id/alarm_random" />
 
+    <TextView
+        android:id="@+id/text_notif_times"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Notification Times"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/text_gen_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/alarm_location"
+        android:paddingTop="10dp"
+        android:text="General Settings"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <CheckBox
         android:id="@+id/setting_vibrate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/the_button"
-        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/text_gen_settings"
         android:text="vibrate on message" />
+
+    <Button
+        android:id="@+id/the_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/text_notif_times"
+        android:layout_below="@+id/setting_vibrate"
+        android:minHeight="24dp"
+        android:onClick="myButtonClickHandler"
+        android:text="Test Message" />
 
 </RelativeLayout>
