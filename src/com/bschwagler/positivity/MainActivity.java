@@ -7,6 +7,7 @@ import android.os.SystemClock;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.AlarmManager;
+import android.app.Application;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -44,7 +45,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	//Stuff for message dialog box
 	Intent bgIntent;
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

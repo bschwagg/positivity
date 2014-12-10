@@ -9,27 +9,41 @@ import java.util.Vector;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.NumberPicker;
 
 public class BackgroundActivity extends Activity {
 
 	//Stuff for Phrase Dialog
 	Vector<String> phrases;
 	PhraseDialog phraseDialog;
+	boolean enableVib;
+	private boolean mShowDialog = false;
+	private boolean mReturningWithResult = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_background);
 		setupPhrases();
+		mReturningWithResult = true;
 	}
 	
-
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+	}
+	
 	private void setupPhrases()
 	{
 		phrases = new Vector<String>();
@@ -38,7 +52,7 @@ public class BackgroundActivity extends Activity {
 		String line;
 		try {
 			while((line = br.readLine()) != null){
-				System.out.println(inputStream);
+				//	System.out.println(inputStream);
 				phrases.add(line);
 			}
 		} catch (IOException e) {
@@ -71,16 +85,46 @@ public class BackgroundActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		//Problem launching dialog from a broadcast receiver?
-		//http://stackoverflow.com/questions/4844031/alertdialog-from-within-broadcastreceiver-can-it-be-done
-		if(phraseDialog != null) {
-			String phrase = phrases.get((int) (Math.random() * phrases.size())) ;
-
-			phraseDialog.setPhrase(  phrase );
-			phraseDialog.show(getFragmentManager(), phrase);
-			//Toast.makeText(c,), Toast.LENGTH_LONG).show();
-		}
+	//code moved to onPostResume() due to bug!
+		//Issue: https://code.google.com/p/android/issues/detail?id=23761
+		//See: http://stackoverflow.com/questions/16265733/failure-delivering-result-onactivityforresult/18345899#18345899
+		
 	}
 	
+	
+
+	@Override
+	protected void onPostResume() {
+	    super.onPostResume();
+	    if (mReturningWithResult) {
+	    	//Problem launching dialog from a broadcast receiver?
+			//http://stackoverflow.com/questions/4844031/alertdialog-from-within-broadcastreceiver-can-it-be-done
+			if(phraseDialog != null) {
+				String phrase = phrases.get((int) (Math.random() * phrases.size())) ;
+
+				phraseDialog.setPhrase(  phrase );
+			    phraseDialog.show(getFragmentManager(), phrase);
+			    
+				//Toast.makeText(c,), Toast.LENGTH_LONG).show();
+				
+				// Vibrate the mobile phone
+				if(GlobalsAreBad.getInstance().vibEnabled) {
+					Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+					if(vibrator != null)
+						vibrator.vibrate(800);
+				}
+			}
+	    }
+	    // Reset the boolean flag back to false for next time.
+	    mReturningWithResult = false;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+	  super.onActivityResult(requestCode, resultCode, data);
+
+	  // remember that dialog should be shown
+	  mReturningWithResult = true;
+	}
 	
 }

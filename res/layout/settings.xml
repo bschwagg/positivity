@@ -23,20 +23,12 @@
         android:text="Notification Times"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
-        android:id="@+id/text_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/alarm_time"
-        android:layout_alignBottom="@+id/alarm_time"
-        android:layout_toRightOf="@+id/TextView01" />
-
     <CheckBox
         android:id="@+id/alarm_random"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/text_time"
+        android:layout_below="@+id/text_time_daily"
         android:text="Random times" />
 
     <CheckBox
@@ -72,5 +64,29 @@
         android:layout_marginTop="83dp"
         android:onClick="myButtonClickHandler"
         android:text="Test Message" />
+
+    <TextView
+        android:id="@+id/text_time_daily"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/alarm_time"
+        android:layout_alignBottom="@+id/alarm_time"
+        android:layout_toRightOf="@+id/alarm_time" />
+
+    <TextView
+        android:id="@+id/text_time_random"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/alarm_random"
+        android:layout_alignBottom="@+id/alarm_random"
+        android:layout_toRightOf="@+id/alarm_random" />
+
+    <CheckBox
+        android:id="@+id/setting_vibrate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/the_button"
+        android:layout_centerVertical="true"
+        android:text="vibrate on message" />
 
 </RelativeLayout>
