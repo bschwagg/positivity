@@ -144,7 +144,8 @@ public class SettingsFragment extends Fragment {
 		for(int i = 0; i < numRandomAlarms; i++) {
 			PendingIntent pi = PendingIntent.getBroadcast( getActivity().getApplicationContext(), 10+i/*id*/, new Intent("com.bschwagler.wakeup"), 0 );
 			AlarmManager am = (AlarmManager)(getActivity().getApplicationContext().getSystemService( Context.ALARM_SERVICE ));
-			am.cancel(pi);
+			if(pi != null && am != null)
+				am.cancel(pi);
 		}
 		randText.setVisibility(View.INVISIBLE);
 	}

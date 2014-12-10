@@ -114,9 +114,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	@Override
 	protected void onDestroy() {
-		am.cancel(pi);
-		unregisterReceiver(br);
 		super.onDestroy();
+		if(pi != null && am != null)
+			am.cancel(pi);
+		if(br != null)
+		unregisterReceiver(br);
+		
 	}
 
 	@Override
