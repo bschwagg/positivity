@@ -103,13 +103,6 @@ public class BackgroundActivity extends Activity {
 			phraseDialog.show(getFragmentManager(), phrase);
 
 			//Toast.makeText(c,), Toast.LENGTH_LONG).show();
-
-			// Vibrate the mobile phone
-			if(GlobalsAreBad.getInstance().vibEnabled) {
-				Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-				if(vibrator != null)
-					vibrator.vibrate(800);
-			}
 		}
 	}
 	
