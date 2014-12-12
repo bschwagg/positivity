@@ -115,25 +115,26 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				// Creates an explicit intent for an Activity in your app
 				Intent resultIntent = new Intent(c, BackgroundActivity.class);
 
-				// The stack builder object will contain an artificial back stack for the
-				// started Activity.
-				// This ensures that navigating backward from the Activity leads out of
-				// your application to the Home screen.
-				TaskStackBuilder stackBuilder = TaskStackBuilder.create(c);
-				// Adds the back stack for the Intent (but not the Intent itself)
-				stackBuilder.addParentStack(BackgroundActivity.class);
-				// Adds the Intent that starts the Activity to the top of the stack
-				stackBuilder.addNextIntent(resultIntent);
+				// Sets the Activity to start in a new, empty task
+				resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				resultIntent.putExtra("notificationId", msgCount); //store ID so we can cancel the notif
+
 				PendingIntent resultPendingIntent =
-						stackBuilder.getPendingIntent(
-								0,
-								PendingIntent.FLAG_UPDATE_CURRENT
-								);
+						  PendingIntent.getActivity(
+							        c,
+							        0,
+							        resultIntent,
+							        PendingIntent.FLAG_UPDATE_CURRENT);
+				
 				mBuilder.setContentIntent(resultPendingIntent);
+				//pop the notification in heads up on top of screen, similar to incoming calls
+				//TODO: may have to setup ringtone or vibration to make this work as well
+				mBuilder.setPriority(NotificationCompat.PRIORITY_MAX); 
+				//mBuilder.setVisibility(Notification.VISIBILITY_PUBLIC); //android 5.0 lock screen feature
 				NotificationManager mNotificationManager =
 						(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 				// mId allows you to update the notification later on.
-				mNotificationManager.notify(1, mBuilder.build());
+				mNotificationManager.notify(msgCount, mBuilder.build());
 				
 				// Vibrate the mobile phone
 				if(GlobalsAreBad.getInstance().vibEnabled) {
@@ -141,8 +142,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 					if(vibrator != null)
 						vibrator.vibrate(800);
 				}
-				msgCount++;
-				Toast.makeText(c, "Notification " + msgCount + " sent", Toast.LENGTH_SHORT).show();
+				msgCount++; //Essentially a UID
+				//				Toast.makeText(c, "Notification " + msgCount + " sent", Toast.LENGTH_SHORT).show(); //TEST
 				//The notification will then start a special service. The service is detached 
 				//see: https://developer.android.com/guide/topics/ui/notifiers/notifications.html
 			}

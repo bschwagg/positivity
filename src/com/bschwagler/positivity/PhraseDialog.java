@@ -3,11 +3,15 @@ package com.bschwagler.positivity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.app.NotificationManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
+import android.view.ContextMenu;
 
 /**
  * @author Brad
@@ -18,6 +22,8 @@ import android.widget.TextView;
 public class PhraseDialog extends DialogFragment  {
 	
 	String msg;
+	private int notifID;
+	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Use the Builder class for convenient dialog construction
@@ -29,13 +35,19 @@ public class PhraseDialog extends DialogFragment  {
 		builder.setCancelable(false);
 		builder.setPositiveButton("Got it!", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-
+				Toast.makeText(getActivity(), "Clearing  " + notifID + " notification", Toast.LENGTH_SHORT).show();
+				if(notifID >= 0){
+					NotificationManager nMgr = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+					nMgr.cancel(notifID);
+					nMgr.cancelAll(); //TODO: temporary until I figure out why new Dialog isn't being created every .show()
+				}
+				}
 			}
-		});
+		);
 		
 		builder.setNegativeButton("Later      ", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-
+				
 			}
 		});
 		// Create the AlertDialog object and return it
@@ -48,5 +60,10 @@ public class PhraseDialog extends DialogFragment  {
     
     public void setPhrase(String str) {
     	msg = str;
+    }
+    
+    public void setNotifID(int id)
+    {
+    	notifID = id;
     }
 }

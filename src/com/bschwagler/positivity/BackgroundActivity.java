@@ -97,8 +97,16 @@ public class BackgroundActivity extends Activity {
 		//Problem launching dialog from a broadcast receiver?
 		//http://stackoverflow.com/questions/4844031/alertdialog-from-within-broadcastreceiver-can-it-be-done
 		if(phraseDialog != null) {
+			
+			//Grab an ID handle to the notification
+			//this can be used by our dialog to dismiss it from the tool bar
+			int id = -1;
+			Bundle extras = getIntent().getExtras();
+			if(extras != null){
+				id = extras.getInt("notificationId");
+			}
+			phraseDialog.setNotifID(id);
 			String phrase = phrases.get((int) (Math.random() * phrases.size())) ;
-
 			phraseDialog.setPhrase(  phrase );
 			phraseDialog.show(getFragmentManager(), phrase);
 

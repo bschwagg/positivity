@@ -28,10 +28,13 @@
         </activity>
         <activity
             android:name=".BackgroundActivity"
-            android:label="@string/title_activity_background" 
-         	android:excludeFromRecents="true"
-         	android:theme="@android:style/Theme.NoDisplay"
-         	android:noHistory="true" >
+            android:excludeFromRecents="true"
+            android:label="@string/title_activity_background"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.NoDisplay" >
+
         </activity>
         
          <!--
