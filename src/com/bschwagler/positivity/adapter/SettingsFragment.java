@@ -95,6 +95,14 @@ public class SettingsFragment extends Fragment {
 				GlobalsAreBad.getInstance().vibEnabled = isChecked;
 			}
 		});
+		
+		CheckBox checkBoxAudio = (CheckBox) rootView.findViewById(R.id.setting_audio);
+		checkBoxAudio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				GlobalsAreBad.getInstance().noiseEnabled = isChecked;
+			}
+		});
 	}
 	
 	private void setupRandomAlarm(View rootView, final LayoutInflater inflater) {
@@ -167,7 +175,7 @@ public class SettingsFragment extends Fragment {
 		randText.setVisibility(View.VISIBLE);
 
 		//Test
-		Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_LONG).show();
 
 	}
 

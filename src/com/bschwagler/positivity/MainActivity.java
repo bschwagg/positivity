@@ -2,6 +2,9 @@ package com.bschwagler.positivity;
 
 import com.bschwagler.positivity.adapter.TabsPagerAdapter;
 
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
@@ -136,23 +139,40 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				// mId allows you to update the notification later on.
 				mNotificationManager.notify(msgCount, mBuilder.build());
 				
-				// Vibrate the mobile phone
-				if(GlobalsAreBad.getInstance().vibEnabled) {
-					Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-					if(vibrator != null)
-						vibrator.vibrate(800);
-				}
+				doNotifFeedback();
+				
 				msgCount++; //Essentially a UID
 				//				Toast.makeText(c, "Notification " + msgCount + " sent", Toast.LENGTH_SHORT).show(); //TEST
 				//The notification will then start a special service. The service is detached 
 				//see: https://developer.android.com/guide/topics/ui/notifiers/notifications.html
 			}
+
+			
 		};
 		registerReceiver(br, new IntentFilter("com.bschwagler.wakeup") );
 		
 	}
 
 
+	private void doNotifFeedback() {
+		// Vibrate the mobile phone
+		if(GlobalsAreBad.getInstance().vibEnabled) {
+			Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			if(vibrator != null)
+				vibrator.vibrate(800);
+		}
+		
+		if(GlobalsAreBad.getInstance().noiseEnabled) {
+			try {
+			    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION /*TYPE_ALARM*/);
+			    Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+			    r.play();
+			} catch (Exception e) {
+			    e.printStackTrace();
+			}
+		}
+		
+	}
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -185,6 +205,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 500 /*ms*/, pi );
 		} else {
 			//Create an intent to open up the background activity, which contains the msg dialog
+			doNotifFeedback();
 			Intent bgIntent = new Intent(this, BackgroundActivity.class);
 			startActivity( bgIntent );
 		}

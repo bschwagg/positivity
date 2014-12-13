@@ -35,7 +35,7 @@ public class PhraseDialog extends DialogFragment  {
 		builder.setCancelable(false);
 		builder.setPositiveButton("Got it!", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				Toast.makeText(getActivity(), "Clearing  " + notifID + " notification", Toast.LENGTH_SHORT).show();
+				//				Toast.makeText(getActivity(), "Clearing  " + notifID + " notification", Toast.LENGTH_SHORT).show();
 				if(notifID >= 0){
 					NotificationManager nMgr = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 					nMgr.cancel(notifID);

@@ -89,12 +89,20 @@
         android:layout_below="@+id/text_gen_settings"
         android:text="vibrate on message" />
 
+    <CheckBox
+        android:id="@+id/setting_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/the_button"
+        android:layout_below="@+id/setting_vibrate"
+        android:text="play alarm on message" />
+
     <Button
         android:id="@+id/the_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/text_notif_times"
-        android:layout_below="@+id/setting_vibrate"
+        android:layout_below="@+id/setting_audio"
+        android:gravity="center_horizontal"
         android:minHeight="24dp"
         android:onClick="myButtonClickHandler"
         android:text="Test Message" />

@@ -7,6 +7,7 @@ public class GlobalsAreBad {
     private static GlobalsAreBad mInstance= null;
 
     public boolean vibEnabled;
+    public boolean noiseEnabled;
 
     protected GlobalsAreBad(){}
 
