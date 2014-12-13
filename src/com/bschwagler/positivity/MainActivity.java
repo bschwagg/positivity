@@ -31,7 +31,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Toast;
-import android.support.v4.app.Fragment;
 
 /**
  * @author Brad
@@ -43,7 +42,7 @@ import android.support.v4.app.Fragment;
  *
  */
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener  {
-	
+
 	//Stuff for pages and tabs
 	private ViewPager viewPager;
 	private TabsPagerAdapter mAdapter;
@@ -51,7 +50,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	// Tab titles
 	private String[] tabs = { "Welcome", "Settings", "Stats" /*TBD: leader board?*/ };
 	int msgCount;
-	
+
 	//Stuff for alarm and timer dialog
 	PendingIntent pi;
 	BroadcastReceiver br;
@@ -61,12 +60,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
+
 		setupTabs();
 		setupAlarmReciever();
 		msgCount = 0;
 	}
-	
+
 	// Initialize tabs
 	@SuppressWarnings("deprecation")
 	private void setupTabs()
@@ -109,15 +108,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
 	private void setupAlarmReciever() {
-		
+
 		//Setup callback for the alarm
 		br = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context c, Intent i) {
-			      
+
 				NotificationCompat.Builder mBuilder =
 						new NotificationCompat.Builder(c)
-				
+
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle("Positivity")
 				.setContentText("Hello World!");
@@ -129,12 +128,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				resultIntent.putExtra("notificationId", msgCount); //store ID so we can cancel the notif
 
 				PendingIntent resultPendingIntent =
-						  PendingIntent.getActivity(
-							        c,
-							        0,
-							        resultIntent,
-							        PendingIntent.FLAG_UPDATE_CURRENT);
-				
+						PendingIntent.getActivity(
+								c,
+								0,
+								resultIntent,
+								PendingIntent.FLAG_UPDATE_CURRENT);
+
 				mBuilder.setContentIntent(resultPendingIntent);
 				//pop the notification in heads up on top of screen, similar to incoming calls
 				//TODO: may have to setup ringtone or vibration to make this work as well
@@ -144,19 +143,19 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 						(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 				// mId allows you to update the notification later on.
 				mNotificationManager.notify(msgCount, mBuilder.build());
-				
+
 				doNotifFeedback();
-				
+
 				msgCount++; //Essentially a UID
 				//				Toast.makeText(c, "Notification " + msgCount + " sent", Toast.LENGTH_SHORT).show(); //TEST
 				//The notification will then start a special service. The service is detached 
 				//see: https://developer.android.com/guide/topics/ui/notifiers/notifications.html
 			}
 
-			
+
 		};
 		registerReceiver(br, new IntentFilter("com.bschwagler.wakeup") );
-		
+
 	}
 
 
@@ -167,17 +166,17 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			if(vibrator != null)
 				vibrator.vibrate(800);
 		}
-		
+
 		if(GlobalsAreBad.getInstance().noiseEnabled) {
 			try {
-			    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION /*TYPE_ALARM*/);
-			    Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-			    r.play();
+				Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION /*TYPE_ALARM*/);
+				Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+				r.play();
 			} catch (Exception e) {
-			    e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
-		
+
 	}
 	@Override
 	protected void onDestroy() {
@@ -189,25 +188,25 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	}
 
 	@Override
-	public void onAttachFragment(Fragment fragment) {
-	
-	}
-	
-	@Override
 	public void onTabSelected(@SuppressWarnings("deprecation") Tab tab, FragmentTransaction ft) {
-		//Launch a timer example when the "Stats" tab is selected
-		if(tab.getText() == "Stats") {
-			//A bit tricky to actually get a handle to the social leaderboard fragment.. 
-			android.support.v4.app.FragmentManager fragmentManager = this.getSupportFragmentManager();
-			List<android.support.v4.app.Fragment> fragments = fragmentManager.getFragments();
-			android.support.v4.app.Fragment lastFragment = fragments.get(fragments.size() - 1);
-			
-			if(lastFragment != null && lastFragment.getClass().equals(SocialFragment.class))
-				((SocialFragment)lastFragment).update();
-			
-		}
+
 		// show respected fragment view
 		viewPager.setCurrentItem(tab.getPosition());
+
+		//Launch a timer example when the "Stats" tab is selected
+		//if(tab.getText() == "Stats") {
+		//A bit tricky to actually get a handle to the social leaderboard fragment.. 
+		android.support.v4.app.FragmentManager fragmentManager = this.getSupportFragmentManager();
+
+		List<android.support.v4.app.Fragment> fragments = fragmentManager.getFragments();
+		if(fragments != null) { //loaded yet
+			android.support.v4.app.Fragment lastFragment = fragments.get(fragments.size() - 1);
+
+			if(lastFragment != null && lastFragment.getClass().equals(SocialFragment.class))
+				((SocialFragment)lastFragment).update();
+		}
+		//}
+
 	}
 
 	// Handle the button click. This callback is set from the layout, so we can access it
@@ -230,7 +229,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
 
 	}
 

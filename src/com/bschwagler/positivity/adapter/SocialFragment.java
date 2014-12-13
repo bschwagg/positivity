@@ -6,6 +6,7 @@ import com.bschwagler.positivity.R;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class SocialFragment extends Fragment {
@@ -48,6 +50,7 @@ public class SocialFragment extends Fragment {
 
 		// Assign adapter to ListView
 		listView.setAdapter(adapter); 
+		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		act = getActivity();
 		/*//In case we want to click on the user's score and get more info...
         // ListView Item Click Listener
@@ -88,6 +91,11 @@ public class SocialFragment extends Fragment {
 				list.add("#1 Frank 100pt");
 				list.add("#2 Me " + points + "pt");
 				adapter.notifyDataSetChanged();
+				//listView.requestFocusFromTouch(); // IMPORTANT!
+				TextView me = (TextView) listView.getChildAt(1);
+				if(me != null)
+					me.setTextColor(Color.YELLOW);
+				
 			}
 		}
 	}
