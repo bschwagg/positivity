@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +42,14 @@ public class PhraseDialog extends DialogFragment  {
 					nMgr.cancel(notifID);
 					nMgr.cancelAll(); //TODO: temporary until I figure out why new Dialog isn't being created every .show()
 				}
-				}
+				
+				// Add a point to our score!
+				SharedPreferences settings = getActivity().getSharedPreferences("UserData", 0);
+				int points = settings.getInt("points", 0);
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putInt("points", points+1);
+				editor.commit();
+			}
 			}
 		);
 		

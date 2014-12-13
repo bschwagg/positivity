@@ -34,12 +34,12 @@ public class SettingsFragment extends Fragment {
 	private TextView randText;
 	private int numRandomAlarms;
 	
-	@Override
-	public void onDestroy() {
-		//Clean up nicely so we don't have outstanding timers
-		cancelRandomAlarms();
-		super.onDestroy();
-	}
+//	@Override
+//	public void onDestroy() {
+//		//Clean up nicely so we don't have outstanding timers
+//		cancelRandomAlarms();
+//		super.onDestroy();
+//	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

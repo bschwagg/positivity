@@ -1,5 +1,8 @@
 package com.bschwagler.positivity;
 
+import java.util.List;
+
+import com.bschwagler.positivity.adapter.SocialFragment;
 import com.bschwagler.positivity.adapter.TabsPagerAdapter;
 
 import android.media.Ringtone;
@@ -12,6 +15,8 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.AlarmManager;
 import android.app.Application;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -26,7 +31,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Toast;
-
+import android.support.v4.app.Fragment;
 
 /**
  * @author Brad
@@ -63,6 +68,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	}
 	
 	// Initialize tabs
+	@SuppressWarnings("deprecation")
 	private void setupTabs()
 	{
 		viewPager = (ViewPager) findViewById(R.id.pager);
@@ -183,12 +189,23 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	}
 
 	@Override
-	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+	public void onAttachFragment(Fragment fragment) {
+	
+	}
+	
+	@Override
+	public void onTabSelected(@SuppressWarnings("deprecation") Tab tab, FragmentTransaction ft) {
 		//Launch a timer example when the "Stats" tab is selected
-		if(tab.getText() == "Stats" && am != null) {
-			Toast.makeText(this.getApplicationContext(), "Come on back! Not yet implemented...", Toast.LENGTH_SHORT).show();
+		if(tab.getText() == "Stats") {
+			//A bit tricky to actually get a handle to the social leaderboard fragment.. 
+			android.support.v4.app.FragmentManager fragmentManager = this.getSupportFragmentManager();
+			List<android.support.v4.app.Fragment> fragments = fragmentManager.getFragments();
+			android.support.v4.app.Fragment lastFragment = fragments.get(fragments.size() - 1);
+			
+			if(lastFragment != null && lastFragment.getClass().equals(SocialFragment.class))
+				((SocialFragment)lastFragment).update();
+			
 		}
-
 		// show respected fragment view
 		viewPager.setCurrentItem(tab.getPosition());
 	}

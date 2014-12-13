@@ -5,14 +5,28 @@
     android:background="#0a0a3b"
     android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="fill_parent"
+    <ListView
+        android:id="@+id/list_leaderbaord"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_below="@+id/text_leaderboard"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="38dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp" >
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/text_leaderboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="LEADER BOARD\n----------------------------\n#1 Frank  (100pt)\n#2 Ben   (45pt)\n#3 Sue   (11pt)\n#4 Me    (2pt)"
+        android:layout_marginTop="22dp"
+        android:gravity="center_vertical"
+        android:text="LEADER BOARD\n----------------------------\n"
         android:textSize="30sp" />
 
 </RelativeLayout>
