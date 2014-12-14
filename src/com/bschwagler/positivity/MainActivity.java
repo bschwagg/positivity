@@ -30,6 +30,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
@@ -163,12 +165,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			@Override
 			public void onReceive(Context c, Intent i) {
 
+				 Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_128);
+				 
 				NotificationCompat.Builder mBuilder =
 						new NotificationCompat.Builder(c)
 
-				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle("Positivity")
-				.setContentText("Hello World!");
+				.setSmallIcon(R.drawable.ic_launcher_24)
+				.setLargeIcon(bm)
+					//				.setContentText("Hello World!");
+				.setContentTitle("Positivity");
+			
 				// Creates an explicit intent for an Activity in your app
 				Intent resultIntent = new Intent(c, BackgroundActivity.class);
 
