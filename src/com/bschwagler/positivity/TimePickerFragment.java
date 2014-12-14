@@ -69,14 +69,17 @@ implements TimePickerDialog.OnTimeSetListener {
 		String min = (minuteSel < 10) ? ("0") : "";
 		min += minuteSel;
 		tv.setText("  " + (hourOfDaySel%12)+":"+min+ tod);
-		tv.setVisibility(View.VISIBLE);
 
+		final Calendar now = Calendar.getInstance();
+		
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, hourOfDaySel);
 		calendar.set(Calendar.MINUTE, minuteSel);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0); 
-		//		 calendar.add(Calendar.DAY_OF_YEAR, 1);
+		
+		if(calendar.before(now))
+			calendar.add(Calendar.DAY_OF_YEAR, 1); //Don't trigger if time is earlier in the day!
 
 		am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
 
@@ -89,7 +92,7 @@ implements TimePickerDialog.OnTimeSetListener {
 			am.cancel(pi);
 
 		if(tv!=null)
-			tv.setVisibility(View.INVISIBLE);
+			tv.setText("");
 
 
 		if(checkBox != null)

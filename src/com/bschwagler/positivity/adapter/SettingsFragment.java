@@ -3,7 +3,6 @@ package com.bschwagler.positivity.adapter;
 import java.util.Calendar;
 
 import com.bschwagler.positivity.GlobalsAreBad;
-
 import com.bschwagler.positivity.R;
 import com.bschwagler.positivity.TimePickerFragment;
 
@@ -21,6 +20,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -33,13 +33,13 @@ public class SettingsFragment extends Fragment {
 
 	private TextView randText;
 	private int numRandomAlarms;
-	
-//	@Override
-//	public void onDestroy() {
-//		//Clean up nicely so we don't have outstanding timers
-//		cancelRandomAlarms();
-//		super.onDestroy();
-//	}
+
+	//	@Override
+	//	public void onDestroy() {
+	//		//Clean up nicely so we don't have outstanding timers
+	//		cancelRandomAlarms();
+	//		super.onDestroy();
+	//	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,30 +58,48 @@ public class SettingsFragment extends Fragment {
 
 	private void SetupLocationAlarm(View rootView) {
 		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_location);
-		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+		checkBox.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				Toast.makeText(getActivity().getApplicationContext(), "Location alarm not yet working!", Toast.LENGTH_SHORT).show();
+			public void onClick(View v) {
+				//is  checked?
+				if (((CheckBox) v).isChecked()) {
+					Toast.makeText(getActivity().getApplicationContext(), "Location alarm not yet working!", Toast.LENGTH_SHORT).show();            
+				}
+				else {
+
+				}
 			}
-		});	
+		});
 	}
 
 	private void SetupMinsAlarm(View rootView) {
 		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_minutes);
-		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+		checkBox.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				Toast.makeText(getActivity().getApplicationContext(), "Minutes alarm not yet working!", Toast.LENGTH_SHORT).show();
+			public void onClick(View v) {
+				//is  checked?
+				if (((CheckBox) v).isChecked()) {
+					Toast.makeText(getActivity().getApplicationContext(), "Minutes alarm not yet working!", Toast.LENGTH_SHORT).show();            
+				}
+				else {
+
+				}
 			}
-		});	
+		});
 	}
 
 	private void SetupWakeAlarm(View rootView) {
 		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_wakeup);
-		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+		checkBox.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				Toast.makeText(getActivity().getApplicationContext(), "Wake alarm not yet working!", Toast.LENGTH_SHORT).show();
+			public void onClick(View v) {
+				//is  checked?
+				if (((CheckBox) v).isChecked()) {
+					Toast.makeText(getActivity().getApplicationContext(), "Wake alarm not yet working!", Toast.LENGTH_SHORT).show();           
+				}
+				else {
+
+				}
 			}
 		});
 	}
@@ -95,7 +113,7 @@ public class SettingsFragment extends Fragment {
 				GlobalsAreBad.getInstance().vibEnabled = isChecked;
 			}
 		});
-		
+
 		CheckBox checkBoxAudio = (CheckBox) rootView.findViewById(R.id.setting_audio);
 		checkBoxAudio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
@@ -104,16 +122,18 @@ public class SettingsFragment extends Fragment {
 			}
 		});
 	}
-	
+
 	private void setupRandomAlarm(View rootView, final LayoutInflater inflater) {
 		final CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_random);
 		randText = (TextView) rootView.findViewById(R.id.text_time_random);
 		numRandomAlarms = 0; //default
-		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+		
+		checkBox.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-				if(isChecked){
-					View npView = inflater.inflate(R.layout.number_picker, null);
+			public void onClick(View v) {
+				//is  checked?
+				if (((CheckBox) v).isChecked()) {
+					 	View npView = inflater.inflate(R.layout.number_picker, null);
 					final NumberPicker np = (NumberPicker) npView.findViewById(R.id.number_picker);
 					np.setMaxValue(12);
 					np.setMinValue(1);
@@ -139,15 +159,16 @@ public class SettingsFragment extends Fragment {
 						}
 					})
 					.create();
-					ad.show();
-				} else {
-					//box was unchecked..
+					ad.show();     
+				}
+				else {
+					//					box was unchecked..
 					cancelRandomAlarms();
 				}
 			}
-		});    
+		});
 	}
-	
+
 	private void setRandomAlarms(int num) {
 		numRandomAlarms = num;
 		String msg = "Alarms: ";
@@ -160,7 +181,10 @@ public class SettingsFragment extends Fragment {
 			calendar.set(Calendar.MINUTE, minute);
 			calendar.set(Calendar.SECOND, second);
 			calendar.set(Calendar.MILLISECOND, 0); 
-			//	 calendar.add(Calendar.DAY_OF_YEAR, 1);
+			
+			Calendar now = Calendar.getInstance();
+			if(calendar.before(now))
+				calendar.add(Calendar.DAY_OF_YEAR, 1); //Don't trigger if time is earlier in the day!
 
 			//alarm stuff
 			PendingIntent pi;
@@ -172,7 +196,6 @@ public class SettingsFragment extends Fragment {
 			msg +=  (" " + hour + ":" + minute + " ");
 		}
 		randText.setText(" ("+num+" alarms)");
-		randText.setVisibility(View.VISIBLE);
 
 		//Test
 		Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_LONG).show();
@@ -187,23 +210,26 @@ public class SettingsFragment extends Fragment {
 			if(pi != null && am != null)
 				am.cancel(pi);
 		}
-		randText.setVisibility(View.INVISIBLE);
+		randText.setText("");
 	}
 
 	private void setupDailyAlarm(View rootView) {
 		final TimePickerFragment newFragment = new TimePickerFragment();	//Create this only once and it will remember the last open settings  
 		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_time);
-
-		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+		
+		
+		checkBox.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-				if(isChecked){
-					newFragment.show(getActivity().getFragmentManager(), "timePicker");
-				} else {
-					newFragment.cancelAlarm(); //recursive?
+			public void onClick(View v) {
+				//is  checked?
+				if (((CheckBox) v).isChecked()) {
+					newFragment.show(getActivity().getFragmentManager(), "timePicker");   
+				}
+				else {
+					newFragment.cancelAlarm(); // (FIXED) Now not recursive on View change, since we're only monitoring clicks
 				}
 			}
-		});    
+		});
 	}
 
 }

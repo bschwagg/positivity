@@ -52,7 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/alarm_time"
         android:layout_alignBottom="@+id/alarm_time"
-        android:layout_toRightOf="@+id/alarm_time" />
+        android:layout_toRightOf="@+id/alarm_time"
+        />
 
     <TextView
         android:id="@+id/text_time_random"
@@ -60,7 +61,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/alarm_random"
         android:layout_alignBottom="@+id/alarm_random"
-        android:layout_toRightOf="@+id/alarm_random" />
+        android:layout_toRightOf="@+id/alarm_random"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/text_notif_times"
