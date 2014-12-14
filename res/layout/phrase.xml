@@ -9,11 +9,14 @@
     <ImageView
         android:id="@+id/phrase_pic"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="0dp"
+        android:adjustViewBounds="true"
         android:background="#FFFFBB33"
         android:contentDescription="@string/app_name"
+        android:cropToPadding="false"
         android:scaleType="center"
-        android:src="@drawable/header" />
+        android:src="@drawable/header2" />
 
     <ProgressBar
         android:id="@+id/pbHeaderProgress"
@@ -41,10 +44,12 @@
 
     <TextView
         android:id="@+id/phrase_msg"
-        android:layout_height="62dp"
+        android:layout_height="80dp"
         android:layout_column="0"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_row="0"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:text="hello"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
