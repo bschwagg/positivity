@@ -94,10 +94,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				// on changing the page
 				// make respected tab selected
 				actionBar.setSelectedNavigationItem(position);
+				updateLeaderBoard();
+
 			}
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				updateLeaderBoard();
+
 			}
 
 			@Override
@@ -193,6 +197,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		// show respected fragment view
 		viewPager.setCurrentItem(tab.getPosition());
 
+	
+	}
+
+	private void updateLeaderBoard() {
 		//Launch a timer example when the "Stats" tab is selected
 		//if(tab.getText() == "Stats") {
 		//A bit tricky to actually get a handle to the social leaderboard fragment.. 
@@ -206,7 +214,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				((SocialFragment)lastFragment).update();
 		}
 		//}
-
 	}
 
 	// Handle the button click. This callback is set from the layout, so we can access it
@@ -229,13 +236,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		
 
 	}
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-
+	
 	}
 
 
