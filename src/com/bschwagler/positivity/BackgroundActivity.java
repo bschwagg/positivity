@@ -24,42 +24,44 @@ import android.widget.NumberPicker;
 public class BackgroundActivity extends Activity {
 
 	//Stuff for Phrase Dialog
-	Vector<String> phrases;
-	PhraseDialog phraseDialog;
+	Vector<String> phrases = null;
+	PhraseDialog phraseDialog = null;
 	boolean enableVib;
 
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_background);
 		setupPhrases();
-	
+
 	}
-	
+
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
 	}
-	
+
 	private void setupPhrases()
 	{
-		phrases = new Vector<String>();
-		InputStream inputStream = getResources().openRawResource(R.raw.phrases);
-		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
-		String line;
-		try {
-			while((line = br.readLine()) != null){
-				//	System.out.println(inputStream);
-				phrases.add(line);
+		if(phrases == null) {
+			phrases = new Vector<String>();
+			InputStream inputStream = getResources().openRawResource(R.raw.phrases);
+			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+			String line;
+			try {
+				while((line = br.readLine()) != null){
+					//	System.out.println(inputStream);
+					phrases.add(line);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-
-		phraseDialog = new PhraseDialog();
+		if(phraseDialog == null)
+			phraseDialog = new PhraseDialog();
 	}
 
 	@Override
@@ -80,14 +82,14 @@ public class BackgroundActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
 		if(phraseDialog != null)
 			phraseDialog.dismiss(); //make sure we cleanly close this dialog when the activity loses focus
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -97,7 +99,7 @@ public class BackgroundActivity extends Activity {
 		//Problem launching dialog from a broadcast receiver?
 		//http://stackoverflow.com/questions/4844031/alertdialog-from-within-broadcastreceiver-can-it-be-done
 		if(phraseDialog != null) {
-			
+
 			//Grab an ID handle to the notification
 			//this can be used by our dialog to dismiss it from the tool bar
 			int id = -1;
@@ -113,7 +115,7 @@ public class BackgroundActivity extends Activity {
 			//Toast.makeText(c,), Toast.LENGTH_LONG).show();
 		}
 	}
-	
-	
-	
+
+
+
 }

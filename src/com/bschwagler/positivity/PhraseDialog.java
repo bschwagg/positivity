@@ -31,96 +31,101 @@ public class PhraseDialog extends DialogFragment  {
 	String msg;
 	private int notifID;
 	private int mProgressStatus = 0;
-	private boolean startedCountdown = false;
+	static private boolean startedCountdown = false;
 
 	CountDownTimer mCountDownTimer;
-
+	AlertDialog ad;
+	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.phrase, null);
 
-		final TextView count = (TextView) view.findViewById(R.id.text_count);
-		final ProgressBar progBar = (ProgressBar) view.findViewById(R.id.pbHeaderProgress);
-		progBar.setVisibility(ProgressBar.INVISIBLE);
-		count.setVisibility(TextView.INVISIBLE);
+		//If we change view while counting down, don't restart the timer..
+		if(startedCountdown == false)
+		{
+			final TextView count = (TextView) view.findViewById(R.id.text_count);
+			final ProgressBar progBar = (ProgressBar) view.findViewById(R.id.pbHeaderProgress);
+			progBar.setVisibility(ProgressBar.INVISIBLE);
+			count.setVisibility(TextView.INVISIBLE);
 
 
-		// Use the Builder class for convenient dialog construction
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			// Use the Builder class for convenient dialog construction
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-		builder.setView(view);
-		builder.setCancelable(false);
-		builder.setPositiveButton("Got it!", null );
+			builder.setView(view);
+			builder.setCancelable(false);
+			builder.setPositiveButton("Got it!", null );
 
-		builder.setNegativeButton("Later      ", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				if(mCountDownTimer != null)
-					mCountDownTimer.cancel();
-				startedCountdown=false;
-			}
-		});
+			builder.setNegativeButton("Later      ", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					if(mCountDownTimer != null)
+						mCountDownTimer.cancel();
+					startedCountdown=false;
+				}
+			});
 
-		// Create the AlertDialog object and return it
-		final AlertDialog ad = builder.create();
+			// Create the AlertDialog object and return it
+			 ad = builder.create();
 
-		ad.setOnShowListener(new DialogInterface.OnShowListener() {
+			ad.setOnShowListener(new DialogInterface.OnShowListener() {
 
-			@Override
-			public void onShow(DialogInterface dialog) {
-				final Button b = ad.getButton(AlertDialog.BUTTON_POSITIVE);
+				@Override
+				public void onShow(DialogInterface dialog) {
+					final Button b = ad.getButton(AlertDialog.BUTTON_POSITIVE);
 
-				b.setOnClickListener(new View.OnClickListener() {
+					b.setOnClickListener(new View.OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
-						if(startedCountdown){
-							startedCountdown=false;
-							mCountDownTimer.cancel();
-							ad.dismiss();
-							return;
-						}
-						startedCountdown = true;
-						b.setText("Cancel");
-						progBar.setVisibility(ProgressBar.VISIBLE);
-						count.setVisibility(TextView.VISIBLE);
-						mProgressStatus = 20; //start at 20 seconds
-						// Start lengthy operation in a background thread
-						mCountDownTimer=new CountDownTimer(20000,1000) {
-
-							@Override
-							public void onTick(long millisUntilFinished) {
-								Log.v("Log_tag", "Tick of Progress"+ mProgressStatus+ millisUntilFinished);
-								mProgressStatus--;
-								progBar.setProgress(mProgressStatus);
-								String progressStr = "" + mProgressStatus;
-								count.setText(progressStr);
-							}
-
-							@Override
-							public void onFinish() {
-								//Short shake to know you're done..
-								if(GlobalsAreBad.getInstance().vibEnabled) {
-									Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-									if(vibrator != null)
-										vibrator.vibrate(100); 
-								}
-								dialogFinishOK();
+						@Override
+						public void onClick(View v) {
+							if(startedCountdown){
+								startedCountdown=false;
+								mCountDownTimer.cancel();
 								ad.dismiss();
+								return;
 							}
-						};
-						mCountDownTimer.start();
+							startedCountdown = true;
+							b.setText("Cancel");
+							progBar.setVisibility(ProgressBar.VISIBLE);
+							count.setVisibility(TextView.VISIBLE);
+							mProgressStatus = 20; //start at 20 seconds
+							// Start lengthy operation in a background thread
+							mCountDownTimer=new CountDownTimer(20000,1000) {
 
-					}
+								@Override
+								public void onTick(long millisUntilFinished) {
+									Log.v("Log_tag", "Tick of Progress"+ mProgressStatus+ millisUntilFinished);
+									mProgressStatus--;
+									progBar.setProgress(mProgressStatus);
+									String progressStr = "" + mProgressStatus;
+									count.setText(progressStr);
+								}
 
-				});
-			}
-		});
+								@Override
+								public void onFinish() {
+									//Short shake to know you're done..
+									if(GlobalsAreBad.getInstance().vibEnabled) {
+										Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+										if(vibrator != null)
+											vibrator.vibrate(100); 
+									}
+									dialogFinishOK();
+									ad.dismiss();
+								}
+							};
+							mCountDownTimer.start();
 
-		TextView textView = (TextView) view.findViewById(R.id.phrase_msg);
-		if(textView != null)
-			textView.setText(msg);
+						}
+
+					});
+				}
+			});
+
+			TextView textView = (TextView) view.findViewById(R.id.phrase_msg);
+			if(textView != null)
+				textView.setText(msg);
+		}
 		return ad;
 	}
 
