@@ -32,6 +32,7 @@ public class PhraseDialog extends DialogFragment  {
 	private int notifID;
 	private int mProgressStatus = 0;
 	static private boolean startedCountdown = false;
+	static private boolean isShowing = false;
 
 	CountDownTimer mCountDownTimer;
 	AlertDialog ad;
@@ -43,7 +44,7 @@ public class PhraseDialog extends DialogFragment  {
 		View view = inflater.inflate(R.layout.phrase, null);
 
 		//If we change view while counting down, don't restart the timer..
-		if(startedCountdown == false)
+		if(isShowing || startedCountdown == false )
 		{
 			final TextView count = (TextView) view.findViewById(R.id.text_count);
 			final ProgressBar progBar = (ProgressBar) view.findViewById(R.id.pbHeaderProgress);
@@ -83,6 +84,7 @@ public class PhraseDialog extends DialogFragment  {
 								startedCountdown=false;
 								mCountDownTimer.cancel();
 								ad.dismiss();
+								isShowing = false;
 								return;
 							}
 							startedCountdown = true;
@@ -112,6 +114,7 @@ public class PhraseDialog extends DialogFragment  {
 									}
 									dialogFinishOK();
 									ad.dismiss();
+									isShowing = false;
 								}
 							};
 							mCountDownTimer.start();
@@ -126,6 +129,8 @@ public class PhraseDialog extends DialogFragment  {
 			if(textView != null)
 				textView.setText(msg);
 		}
+		
+		isShowing = true;
 		return ad;
 	}
 
@@ -154,5 +159,9 @@ public class PhraseDialog extends DialogFragment  {
 	public void setNotifID(int id)
 	{
 		notifID = id;
+	}
+
+	public boolean isShowing() {
+		return isShowing;
 	}
 }

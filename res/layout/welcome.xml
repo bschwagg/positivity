@@ -18,6 +18,7 @@
              android:id="@+id/welcome_message"
              android:layout_width="fill_parent"
              android:layout_height="fill_parent"
+             
              android:gravity="left"
              android:text=""
              android:textSize="20sp" />

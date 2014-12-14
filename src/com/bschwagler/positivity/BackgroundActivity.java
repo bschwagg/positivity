@@ -98,7 +98,7 @@ public class BackgroundActivity extends Activity {
 		//See: http://stackoverflow.com/questions/16265733/failure-delivering-result-onactivityforresult/18345899#18345899
 		//Problem launching dialog from a broadcast receiver?
 		//http://stackoverflow.com/questions/4844031/alertdialog-from-within-broadcastreceiver-can-it-be-done
-		if(phraseDialog != null) {
+		if(phraseDialog != null || !phraseDialog.isShowing()) {
 
 			//Grab an ID handle to the notification
 			//this can be used by our dialog to dismiss it from the tool bar

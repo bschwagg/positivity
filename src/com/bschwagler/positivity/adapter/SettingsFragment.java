@@ -193,7 +193,12 @@ public class SettingsFragment extends Fragment {
 			am = (AlarmManager)(getActivity().getApplicationContext().getSystemService( Context.ALARM_SERVICE ));
 
 			am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
-			msg +=  (" " + hour + ":" + minute + " ");
+			
+			String tod = (hour > 12) ? " PM":" AM";
+			String min = (minute < 10) ? ("0") : "";
+			min += minute;
+		
+			msg +=  ("  " + (hour%12)+":"+min+ tod);
 		}
 		randText.setText(" ("+num+" alarms)");
 
