@@ -149,6 +149,7 @@ public class PhraseDialog extends DialogFragment  {
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt("points", points+1);
 		editor.commit();
+		Toast.makeText(getActivity(), "Nice! You earned +1 points", Toast.LENGTH_SHORT).show();
 	}
 
 	public void setPhrase(String str) {
