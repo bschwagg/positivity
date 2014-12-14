@@ -13,7 +13,9 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -24,12 +26,15 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 /**
@@ -64,6 +69,46 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		setupTabs();
 		setupAlarmReciever();
 		msgCount = 0;
+		
+		promptUserName(this);
+	}
+
+	private void promptUserName(final Activity act) {
+		
+		final SharedPreferences settings = this.getSharedPreferences("UserData", 0);
+		String name = settings.getString("username", "");
+
+		//Do we need to show?
+		if(  name == "") {
+			final EditText txtUrl = new EditText(this);
+			txtUrl.setHint("");
+			new AlertDialog.Builder(this)
+			.setTitle("Welcome to Positivity!")
+			.setMessage("Please enter your name:")
+			.setView(txtUrl)
+			.setPositiveButton("Let's go!",  new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					SharedPreferences.Editor editor = settings.edit();
+					String user = txtUrl.getText().toString();
+					editor.putString("username", user);
+					editor.commit();
+					Toast.makeText(act, "Thanks " + user + "!", Toast.LENGTH_SHORT).show(); //TEST
+
+				}
+			})
+			.setNegativeButton("Later",  new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+
+				}
+			})
+			.show();
+		}
+		
 	}
 
 	// Initialize tabs
