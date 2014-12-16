@@ -80,6 +80,17 @@ public class PhraseDialog extends DialogFragment  {
 
 						@Override
 						public void onClick(View v) {
+							
+							//Are they NOT using the countdown timer?
+							if( ! GlobalsAreBad.getInstance().useCountdown ) {
+								//just clean up
+								dialogFinishOK();
+								ad.dismiss();
+								isShowing = false;
+								return;
+							}
+							
+							//Countdown already going? That means they clicked the "cancel" button
 							if(startedCountdown){
 								startedCountdown=false;
 								mCountDownTimer.cancel();
@@ -106,7 +117,7 @@ public class PhraseDialog extends DialogFragment  {
 
 								@Override
 								public void onFinish() {
-									//Short shake to know you're done..
+									//Short shake to know the countdown is done..
 									if(GlobalsAreBad.getInstance().vibEnabled) {
 										Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 										if(vibrator != null)

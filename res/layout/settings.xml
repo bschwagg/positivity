@@ -10,9 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="23dp"
-        android:text="Daily time" />
+        android:layout_below="@+id/text_notif_times"
+        android:text="Daily time"
+        android:textSize="18sp" />
 
     <CheckBox
         android:id="@+id/alarm_random"
@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/text_time_daily"
-        android:text="Random times" />
+        android:text="Random times"
+        android:textSize="18sp" />
 
     <CheckBox
         android:id="@+id/alarm_wakeup"
@@ -28,7 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/alarm_random"
-        android:text="First use after wake-up" />
+        android:text="First use after wake-up"
+        android:textSize="18sp" />
 
     <CheckBox
         android:id="@+id/alarm_minutes"
@@ -36,7 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/alarm_wakeup"
-        android:text="After minutes on phone" />
+        android:text="After minutes on phone"
+        android:textSize="18sp" />
 
     <CheckBox
         android:id="@+id/alarm_location"
@@ -44,7 +47,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/alarm_minutes"
-        android:text="Location" />
+        android:text="Location"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/text_time_daily"
@@ -70,8 +74,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:paddingTop="10dp"
         android:text="Notification Times"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/text_gen_settings"
@@ -81,7 +87,8 @@
         android:layout_below="@+id/alarm_location"
         android:paddingTop="10dp"
         android:text="General Settings"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="25sp" />
 
     <CheckBox
         android:id="@+id/setting_vibrate"
@@ -89,24 +96,37 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/text_gen_settings"
-        android:text="vibrate on message" />
+        android:checked="true"
+        android:text="Vibrate on new message"
+        android:textSize="18sp" />
 
     <CheckBox
         android:id="@+id/setting_audio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/the_button"
         android:layout_below="@+id/setting_vibrate"
-        android:text="play alarm on message" />
+        android:text="Play alarm on new message"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/the_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/setting_audio"
-        android:gravity="center_horizontal"
+        android:layout_below="@+id/setting_countdown"
         android:minHeight="24dp"
         android:onClick="myButtonClickHandler"
-        android:text="Test Message" />
+        android:layout_marginLeft="25dp"
+        android:text="Test Message"
+        android:textSize="18sp" />
+
+    <CheckBox
+        android:id="@+id/setting_countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/setting_audio"
+        android:checked="true"
+        android:text="Use the countdown timer"
+        android:textSize="18sp" />
 
 </RelativeLayout>

@@ -131,7 +131,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		ParseObject score = new ParseObject("Entry");
 		score.put("points",  0); //Reset score to nill!
 		score.put("username",  name);
-		score.put("countdown",  true); //TODO
+		score.put("countdown",  GlobalsAreBad.getInstance().useCountdown ); 
 		score.saveInBackground();
 		Log.d("cloud","Storing user entry ");
 

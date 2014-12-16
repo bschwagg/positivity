@@ -121,6 +121,14 @@ public class SettingsFragment extends Fragment {
 				GlobalsAreBad.getInstance().noiseEnabled = isChecked;
 			}
 		});
+		
+		CheckBox checkBoxCoutdown = (CheckBox) rootView.findViewById(R.id.setting_countdown);
+		checkBoxCoutdown.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				GlobalsAreBad.getInstance().useCountdown = isChecked;
+			}
+		});
 	}
 
 	private void setupRandomAlarm(View rootView, final LayoutInflater inflater) {

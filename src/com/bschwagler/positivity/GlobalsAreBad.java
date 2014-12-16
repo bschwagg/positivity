@@ -15,6 +15,8 @@ public class GlobalsAreBad {
     public boolean noiseEnabled;
     public List<ParseObject> leaderBoard;
 
+	public boolean useCountdown;
+
     protected GlobalsAreBad(){
     	leaderBoard = new ArrayList<ParseObject>();
     }
