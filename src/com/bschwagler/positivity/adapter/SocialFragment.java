@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,20 +91,30 @@ public class SocialFragment extends Fragment {
 			
 			
 			if(adapter != null && list != null) {
-				//TODO: Fetch data and create list
-				list.clear();
-				int i = 0, highlightIndex = -1;
-				for(ParseObject p : GlobalsAreBad.getInstance().leaderBoard){
-					if(userName != "" && userName.equals(p.getString("username")))
-						highlightIndex = i;
-					list.add("#" + ++i + " " +  p.getString("username") + " " + p.getInt("points")+ " pts" );
-					
+				
+				//Not yet loaded?
+				if(GlobalsAreBad.getInstance().leaderBoard.size() == 0) {
+
 				}
-				adapter.notifyDataSetChanged();
-				//listView.requestFocusFromTouch(); // IMPORTANT!
-				TextView me = (TextView) listView.getChildAt(highlightIndex);
-				if(me != null)
-					me.setTextColor(Color.YELLOW);
+				else
+				{
+					//populate the list!
+					ProgressBar spinner = (ProgressBar) rootView.findViewById(R.id.loading_leaderboard);
+					spinner.setVisibility(ProgressBar.INVISIBLE);
+					list.clear();
+					int i = 0, highlightIndex = -1;
+					for(ParseObject p : GlobalsAreBad.getInstance().leaderBoard){
+						if(userName != "" && userName.equals(p.getString("username")))
+							highlightIndex = i;
+						list.add("#" + ++i + " " +  p.getString("username") + " " + p.getInt("points")+ " pts" );
+
+					}
+					adapter.notifyDataSetChanged();
+					//listView.requestFocusFromTouch(); // IMPORTANT!
+					TextView me = (TextView) listView.getChildAt(highlightIndex);
+					if(me != null)
+						me.setTextColor(Color.YELLOW);
+				}
 				
 			}
 		}
