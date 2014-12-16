@@ -90,21 +90,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	private void setupCloud() {
 		
 		if( !isCloudSetup ){
-			Parse.enableLocalDatastore(this);
-			// Initialize for our Dashboard ID..
-			Parse.initialize(this, "EYc7GORw58kM2wMByUVqBYR9uPulnCKXIsfDYEmB", "f6Ftl4WgTSC3NKWXbVaHkEolA9skWL9m692LeyEj");
-
-
-			ParseUser.enableAutomaticUser();
-			ParseUser.getCurrentUser().saveInBackground(); 
-			ParseACL defaultACL = new ParseACL();
-			// If you would like all objects to be private by default, remove this line.
-			defaultACL.setPublicReadAccess(true);
-
-			ParseACL.setDefaultACL(defaultACL, true);
-
-			ParseAnalytics.trackAppOpened(getIntent());
-
+			
 			//Get the user's data here
 			final SharedPreferences settings = this.getSharedPreferences("UserData", 0);
 			final String name = settings.getString("username", "");
