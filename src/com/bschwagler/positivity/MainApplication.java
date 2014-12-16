@@ -35,7 +35,7 @@ public class MainApplication extends Application {
 
 		ParseACL.setDefaultACL(defaultACL, true);
 
-		
+		//			ParseAnalytics.trackAppOpened(getIntent());
 
 	}
 

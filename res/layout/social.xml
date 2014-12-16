@@ -10,13 +10,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignTop="@+id/loading_leaderboard"
+        android:layout_below="@+id/text_leaderboard"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="38dp"
         android:listSelector="@drawable/list_selector"
         android:paddingLeft="50dp"
         android:paddingRight="50dp" >
-
     </ListView>
 
     <TextView

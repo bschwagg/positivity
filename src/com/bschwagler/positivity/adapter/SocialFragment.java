@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,9 +79,6 @@ public class SocialFragment extends Fragment {
 
          }); 
 		 */
-		
-		update(); //try an update. If it doesn't work then later, when the data is downloaded, it will try updating again
-		
 		return rootView;
 	}
 
@@ -98,14 +94,13 @@ public class SocialFragment extends Fragment {
 				
 				//Not yet loaded?
 				if(GlobalsAreBad.getInstance().leaderBoard.size() == 0) {
-					Log.d("cloud", "Leaderboard can't update yet.. no data..");
+
 				}
 				else
 				{
 					//populate the list!
 					ProgressBar spinner = (ProgressBar) rootView.findViewById(R.id.loading_leaderboard);
-					if(spinner != null)
-						spinner.setVisibility(ProgressBar.INVISIBLE);
+					spinner.setVisibility(ProgressBar.INVISIBLE);
 					list.clear();
 					int i = 0, highlightIndex = -1;
 					for(ParseObject p : GlobalsAreBad.getInstance().leaderBoard){

@@ -72,8 +72,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	PendingIntent pi;
 	BroadcastReceiver br;
 	AlarmManager am;
-	private boolean querryRunning = false;
-
+	private  boolean isCloudSetup = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,49 +81,40 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 		setupTabs();
 		setupAlarmReciever();
+		setupCloud(); //cloud storage for the leader board. Stored locally until updated.
 		promptUserName(this); //all that's stored locally is the user name. 
-
+		
 	}
 
 	@SuppressWarnings("deprecation")
-	private void updateCloudLeaderBoard() {
+	private void setupCloud() {
+		
+		if( !isCloudSetup ){
+			
+			//Get the user's data here
+			final SharedPreferences settings = this.getSharedPreferences("UserData", 0);
+			final String name = settings.getString("username", "");
 
-		ParseAnalytics.trackAppOpened(getIntent());
-
-		//Get the user's data here
-		final SharedPreferences settings = this.getSharedPreferences("UserData", 0);
-		final String name = settings.getString("username", "");
-
-	
-
-		//Get ALL the leader board data..
-		if( querryRunning ) {
-			Log.d("cloud", "Still waiting on prior query to finish..");
-		} else {
-			Log.d("cloud", "Starting leader board download");
+			//Get ALL the leader board data..
 			ParseQuery<ParseObject> queryLB = ParseQuery.getQuery("Entry");
 			queryLB.whereExists("username");
-			queryLB.orderByDescending("points");
 			queryLB.findInBackground(new FindCallback<ParseObject>() {
 				public void done(List<ParseObject> scoreList, ParseException e) {
 					if (e == null) {
 						Log.d("cloud", "Retrieved " + scoreList.size() + " scores");
-						GlobalsAreBad.getInstance().leaderBoard.clear();
 						GlobalsAreBad.getInstance().leaderBoard.addAll(scoreList); //save to our leader board!
-						updateLeaderBoard();
 						//TEST: print the leaderboard
 						for(ParseObject p : scoreList) {
-							//Log.d("cloud", "Cloud Info: Name: " + p.getString("username") + " Score: " + p.getInt("points") + " Countdown: " + p.getBoolean("countdown")); //TEST
+							Log.d("cloud", "Cloud Info: Name: " + p.getString("username") + " Score: " + p.getInt("points") + " Countdown: " + p.getBoolean("countdown"));
 							if(p.getString("username").equals((name)))
 								Log.d("cloud", "Found myself in the cloud");
 						}
+						//TODO: get leader board data
 					} else {
 						Log.d("cloud", "Error: Unable to download leader board from cloud.  Error:" + e.getMessage());
 					}
-					querryRunning = false;
 				}
 			});
-			querryRunning  = true;
 		}
 	}
 
@@ -154,7 +145,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					final String desiredUser = txtUrl.getText().toString();
-
+					
 					ParseQuery<ParseObject> query = ParseQuery.getQuery("Entry");
 					query.whereEqualTo("username", desiredUser);
 					query.findInBackground(new FindCallback<ParseObject>() {
@@ -220,14 +211,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				// on changing the page
 				// make respected tab selected
 				actionBar.setSelectedNavigationItem(position);
-				//cloud storage for the leader board. Stored locally until updated.  This keeps the network traffic fairly low
-				if(position==2)
-					updateCloudLeaderBoard(); 
+				updateLeaderBoard();
 
 			}
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				updateLeaderBoard();
 
 			}
 
