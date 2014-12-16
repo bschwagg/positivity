@@ -4,6 +4,15 @@ import java.util.List;
 
 import com.bschwagler.positivity.adapter.SocialFragment;
 import com.bschwagler.positivity.adapter.TabsPagerAdapter;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseACL;
+import com.parse.ParseAnalytics;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -35,6 +44,7 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -56,13 +66,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	private ActionBar actionBar;
 	// Tab titles
 	private String[] tabs = { "Welcome", "Settings", "Stats" /*TBD: leader board?*/ };
-	int msgCount;
+	private int msgCount = 0;
 
 	//Stuff for alarm and timer dialog
 	PendingIntent pi;
 	BroadcastReceiver br;
 	AlarmManager am;
-
+	private  boolean isCloudSetup = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,13 +81,68 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 		setupTabs();
 		setupAlarmReciever();
-		msgCount = 0;
+		setupCloud(); //cloud storage for the leader board. Stored locally until updated.
+		promptUserName(this); //all that's stored locally is the user name. 
 		
-		promptUserName(this);
 	}
 
-	private void promptUserName(final Activity act) {
+	@SuppressWarnings("deprecation")
+	private void setupCloud() {
 		
+		if( !isCloudSetup ){
+			Parse.enableLocalDatastore(this);
+			// Initialize for our Dashboard ID..
+			Parse.initialize(this, "EYc7GORw58kM2wMByUVqBYR9uPulnCKXIsfDYEmB", "f6Ftl4WgTSC3NKWXbVaHkEolA9skWL9m692LeyEj");
+
+
+			ParseUser.enableAutomaticUser();
+			ParseUser.getCurrentUser().saveInBackground(); 
+			ParseACL defaultACL = new ParseACL();
+			// If you would like all objects to be private by default, remove this line.
+			defaultACL.setPublicReadAccess(true);
+
+			ParseACL.setDefaultACL(defaultACL, true);
+
+			ParseAnalytics.trackAppOpened(getIntent());
+
+			//Get the user's data here
+			final SharedPreferences settings = this.getSharedPreferences("UserData", 0);
+			final String name = settings.getString("username", "");
+
+			//Get ALL the leader board data..
+			ParseQuery<ParseObject> queryLB = ParseQuery.getQuery("Entry");
+			queryLB.whereExists("username");
+			queryLB.findInBackground(new FindCallback<ParseObject>() {
+				public void done(List<ParseObject> scoreList, ParseException e) {
+					if (e == null) {
+						Log.d("cloud", "Retrieved " + scoreList.size() + " scores");
+						GlobalsAreBad.getInstance().leaderBoard.addAll(scoreList); //save to our leader board!
+						//TEST: print the leaderboard
+						for(ParseObject p : scoreList) {
+							Log.d("cloud", "Cloud Info: Name: " + p.getString("username") + " Score: " + p.getInt("points") + " Countdown: " + p.getBoolean("countdown"));
+							if(p.getString("username").equals((name)))
+								Log.d("cloud", "Found myself in the cloud");
+						}
+						//TODO: get leader board data
+					} else {
+						Log.d("cloud", "Error: Unable to download leader board from cloud.  Error:" + e.getMessage());
+					}
+				}
+			});
+		}
+	}
+
+	private void createNewCloudEntry(String name) {
+		ParseObject score = new ParseObject("Entry");
+		score.put("points",  0); //Reset score to nill!
+		score.put("username",  name);
+		score.put("countdown",  true); //TODO
+		score.saveInBackground();
+		Log.d("cloud","Storing user entry ");
+
+	}
+	private void promptUserName(final Activity act) {
+
 		final SharedPreferences settings = this.getSharedPreferences("UserData", 0);
 		String name = settings.getString("username", "");
 
@@ -92,25 +158,43 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					SharedPreferences.Editor editor = settings.edit();
-					String user = txtUrl.getText().toString();
-					editor.putString("username", user);
-					editor.commit();
-					Toast.makeText(act, "Thanks " + user + "!", Toast.LENGTH_SHORT).show(); //TEST
-
+					final String desiredUser = txtUrl.getText().toString();
+					
+					ParseQuery<ParseObject> query = ParseQuery.getQuery("Entry");
+					query.whereEqualTo("username", desiredUser);
+					query.findInBackground(new FindCallback<ParseObject>() {
+						public void done(List<ParseObject> entryList, ParseException e) {
+							if (e != null ) {
+								Log.d("cloud", "Error getting user info. Error:" + e.getMessage());
+								Toast.makeText(act, "Sorry! Unable to check if this name is already taken online. Please restart to try again! ", Toast.LENGTH_SHORT).show(); //TEST
+								//don't get into an endless loop prompting user name!
+							} else if(entryList.size() == 0) {
+								Log.d("cloud", "User name not taken! Creating a new entry. ");
+								SharedPreferences.Editor editor = settings.edit();
+								editor.putString("username", desiredUser);
+								editor.commit();
+								Toast.makeText(act, "Thanks " + desiredUser + "!", Toast.LENGTH_SHORT).show(); //TEST
+								createNewCloudEntry(desiredUser); //If this fails we should try again...
+							} 	else  {
+								//Check that user is unique here!
+								Log.d("cloud", "Retrieved " + entryList.size() + " scores");
+								Toast.makeText(act, "Sorry, that name is already taken! Please try again...", Toast.LENGTH_SHORT).show(); //TEST
+								promptUserName(act); //recursion is good! or not...
+							}
+						}
+					});
 				}
 			})
 			.setNegativeButton("Later",  new DialogInterface.OnClickListener() {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-
+					Toast.makeText(act, "No problem.. we can do that later.. Enjoy!", Toast.LENGTH_SHORT).show(); //TEST
 				}
 			})
 			.show();
 		}
-		
+
 	}
 
 	// Initialize tabs
@@ -165,16 +249,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			@Override
 			public void onReceive(Context c, Intent i) {
 
-				 Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_128);
-				 
+				Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_128);
+
 				NotificationCompat.Builder mBuilder =
 						new NotificationCompat.Builder(c)
 
 				.setSmallIcon(R.drawable.ic_launcher_24)
 				.setLargeIcon(bm)
-					//				.setContentText("Hello World!");
+				//				.setContentText("Hello World!");
 				.setContentTitle("Positivity");
-			
+
 				// Creates an explicit intent for an Activity in your app
 				Intent resultIntent = new Intent(c, BackgroundActivity.class);
 
@@ -248,7 +332,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		// show respected fragment view
 		viewPager.setCurrentItem(tab.getPosition());
 
-	
+
 	}
 
 	private void updateLeaderBoard() {
@@ -287,13 +371,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		
+
 
 	}
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-	
+
 	}
 
 

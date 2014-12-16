@@ -1,8 +1,11 @@
 package com.bschwagler.positivity.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.bschwagler.positivity.GlobalsAreBad;
 import com.bschwagler.positivity.R;
+import com.parse.ParseObject;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -83,16 +86,22 @@ public class SocialFragment extends Fragment {
 		if(act != null)
 		{
 			SharedPreferences settings = act.getSharedPreferences("UserData", 0);
-			int points = settings.getInt("points", 0);
-
+			String userName = settings.getString("username", "");
+			
+			
 			if(adapter != null && list != null) {
 				//TODO: Fetch data and create list
 				list.clear();
-				list.add("#1 Frank 100pt");
-				list.add("#2 Me " + points + "pt");
+				int i = 0, highlightIndex = -1;
+				for(ParseObject p : GlobalsAreBad.getInstance().leaderBoard){
+					if(userName != "" && userName.equals(p.getString("username")))
+						highlightIndex = i;
+					list.add("#" + ++i + " " +  p.getString("username") + " " + p.getInt("points")+ " pts" );
+					
+				}
 				adapter.notifyDataSetChanged();
 				//listView.requestFocusFromTouch(); // IMPORTANT!
-				TextView me = (TextView) listView.getChildAt(1);
+				TextView me = (TextView) listView.getChildAt(highlightIndex);
 				if(me != null)
 					me.setTextColor(Color.YELLOW);
 				
