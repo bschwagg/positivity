@@ -17,8 +17,11 @@ public class GlobalsAreBad {
 
 	public boolean useCountdown;
 
+	public ParseObject myParseObject;
+
     protected GlobalsAreBad(){
     	leaderBoard = new ArrayList<ParseObject>();
+    	myParseObject = null;
     }
 
     public static synchronized GlobalsAreBad getInstance(){

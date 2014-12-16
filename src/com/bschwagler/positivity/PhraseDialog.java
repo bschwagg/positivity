@@ -155,11 +155,20 @@ public class PhraseDialog extends DialogFragment  {
 		}
 
 		// Add a point to our score!
+		//TODO: Move this all to the cloud
 		SharedPreferences settings = getActivity().getSharedPreferences("UserData", 0);
 		int points = settings.getInt("points", 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt("points", points+1);
 		editor.commit();
+		
+		if( GlobalsAreBad.getInstance().myParseObject != null){
+			Log.d("cloud", "Saving score for " + GlobalsAreBad.getInstance().myParseObject.getString("username") + " to the cloud!");
+			GlobalsAreBad.getInstance().myParseObject.put("points", points);
+			GlobalsAreBad.getInstance().myParseObject.put("countdown", GlobalsAreBad.getInstance().useCountdown);
+			GlobalsAreBad.getInstance().myParseObject.saveInBackground();
+		}
+		
 		Toast.makeText(getActivity(), "Nice! You earned +1 points", Toast.LENGTH_SHORT).show();
 	}
 

@@ -106,8 +106,9 @@ public class SettingsFragment extends Fragment {
 
 	private void setupParams(View rootView)
 	{	
-		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.setting_vibrate);
-		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+		CheckBox checkBoxVib = (CheckBox) rootView.findViewById(R.id.setting_vibrate);
+		GlobalsAreBad.getInstance().vibEnabled = checkBoxVib.isChecked();
+		checkBoxVib.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				GlobalsAreBad.getInstance().vibEnabled = isChecked;
@@ -115,6 +116,7 @@ public class SettingsFragment extends Fragment {
 		});
 
 		CheckBox checkBoxAudio = (CheckBox) rootView.findViewById(R.id.setting_audio);
+		GlobalsAreBad.getInstance().noiseEnabled = checkBoxAudio.isChecked();
 		checkBoxAudio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -123,6 +125,7 @@ public class SettingsFragment extends Fragment {
 		});
 		
 		CheckBox checkBoxCoutdown = (CheckBox) rootView.findViewById(R.id.setting_countdown);
+		GlobalsAreBad.getInstance().useCountdown = checkBoxCoutdown.isChecked();
 		checkBoxCoutdown.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

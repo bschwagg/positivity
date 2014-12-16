@@ -114,8 +114,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 						//TEST: print the leaderboard
 						for(ParseObject p : scoreList) {
 							//Log.d("cloud", "Cloud Info: Name: " + p.getString("username") + " Score: " + p.getInt("points") + " Countdown: " + p.getBoolean("countdown")); //TEST
-							if(p.getString("username").equals((name)))
+							if(p.getString("username").equals((name))){
+								GlobalsAreBad.getInstance().myParseObject = p;
 								Log.d("cloud", "Found myself in the cloud");
+							}
 						}
 					} else {
 						Log.d("cloud", "Error: Unable to download leader board from cloud.  Error:" + e.getMessage());
