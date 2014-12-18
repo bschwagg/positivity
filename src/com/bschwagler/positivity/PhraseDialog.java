@@ -1,5 +1,7 @@
 package com.bschwagler.positivity;
 
+import com.parse.ParseObject;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -162,11 +164,13 @@ public class PhraseDialog extends DialogFragment  {
 		editor.putInt("points", points+1);
 		editor.commit();
 		
-		if( GlobalsAreBad.getInstance().myParseObject != null){
-			Log.d("cloud", "Saving score for " + GlobalsAreBad.getInstance().myParseObject.getString("username") + " to the cloud!");
-			GlobalsAreBad.getInstance().myParseObject.put("points", points);
-			GlobalsAreBad.getInstance().myParseObject.put("countdown", GlobalsAreBad.getInstance().useCountdown);
-			GlobalsAreBad.getInstance().myParseObject.saveInBackground();
+		ParseObject pObj = ((MainApplication)getActivity().getApplication()).myParseObject;
+		
+		if( pObj != null){
+			Log.d("cloud", "Saving score for " + pObj.getString("username") + " to the cloud!");
+			pObj.put("points", points);
+			pObj.put("countdown", GlobalsAreBad.getInstance().useCountdown);
+			pObj.saveInBackground();
 		}
 		
 		Toast.makeText(getActivity(), "Nice! You earned +1 points", Toast.LENGTH_SHORT).show();

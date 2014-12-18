@@ -1,5 +1,6 @@
 package com.bschwagler.positivity;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.bschwagler.positivity.adapter.SocialFragment;
@@ -73,17 +74,38 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	BroadcastReceiver br;
 	AlarmManager am;
 	private boolean querryRunning = false;
+	private android.support.v4.app.Fragment mSettingsFrag;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		setupTabs();
+		setupTabs(savedInstanceState);
 		setupAlarmReciever();
-		promptUserName(this); //all that's stored locally is the user name. 
-
+		promptUserName(this); //all that's stored locally is the user name. 	
 	}
+	
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		GlobalsAreBad.getInstance().saveToFile(this);
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		//Couldn't get the fragment to automatically save. So this is brute force
+		GlobalsAreBad.getInstance().saveToFile(this);
+		
+//		if(pi != null && am != null)
+		//			am.cancel(pi);
+		//		if(br != null)
+		//		unregisterReceiver(br);
+	}
+	
 
 	@SuppressWarnings("deprecation")
 	private void updateCloudLeaderBoard() {
@@ -106,14 +128,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				public void done(List<ParseObject> scoreList, ParseException e) {
 					if (e == null) {
 						Log.d("cloud", "Retrieved " + scoreList.size() + " scores");
-						GlobalsAreBad.getInstance().leaderBoard.clear();
-						GlobalsAreBad.getInstance().leaderBoard.addAll(scoreList); //save to our leader board!
+						((MainApplication)getApplication()).leaderBoard.clear();
+						((MainApplication)getApplication()).leaderBoard.addAll(scoreList); //save to our leader board!
 						updateLeaderBoard();
 						//TEST: print the leaderboard
 						for(ParseObject p : scoreList) {
 							//Log.d("cloud", "Cloud Info: Name: " + p.getString("username") + " Score: " + p.getInt("points") + " Countdown: " + p.getBoolean("countdown")); //TEST
 							if(p.getString("username").equals((name))){
-								GlobalsAreBad.getInstance().myParseObject = p;
+								((MainApplication)getApplication()).myParseObject = p;
 								Log.d("cloud", "Found myself in the cloud");
 							}
 						}
@@ -194,7 +216,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	// Initialize tabs
 	@SuppressWarnings("deprecation")
-	private void setupTabs()
+	private void setupTabs(Bundle savedInstanceState)
 	{
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		actionBar = getActionBar();
@@ -209,6 +231,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			actionBar.addTab(actionBar.newTab().setText(tab_name)
 					.setTabListener(this));
 		}
+		
+		//remember the settings info?
+		if(savedInstanceState!=null)
+			mSettingsFrag = getSupportFragmentManager().getFragment(savedInstanceState, tabs[1]);
+		
 
 		/**
 		 * on swiping the viewpager make respective tab selected
@@ -328,14 +355,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			}
 		}
 
-	}
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		//		if(pi != null && am != null)
-		//			am.cancel(pi);
-		//		if(br != null)
-		//		unregisterReceiver(br);
 	}
 
 	@Override

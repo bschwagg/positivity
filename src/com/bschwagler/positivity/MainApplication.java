@@ -1,14 +1,19 @@
 package com.bschwagler.positivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.parse.Parse;
 import com.parse.ParseACL;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import android.app.Application;
 import android.util.Log;
 
 public class MainApplication extends Application {
-
+	public List<ParseObject> leaderBoard;
+	public ParseObject myParseObject;
 	@Override
 	public void onCreate()
 	{
@@ -21,6 +26,7 @@ public class MainApplication extends Application {
 	}
 
 	private void initParse() {
+		
 		Log.d("cloud", "Initializing PARSE");
 		Parse.enableLocalDatastore(this);
 		// Initialize for our Dashboard ID..
@@ -35,13 +41,14 @@ public class MainApplication extends Application {
 
 		ParseACL.setDefaultACL(defaultACL, true);
 
-		
+		leaderBoard = new ArrayList<ParseObject>();
+		myParseObject = null;
 
 	}
 
 	protected void initSingletons()
 	{
 		// Initialize the instance of MySingleton
-		GlobalsAreBad.getInstance();
+		GlobalsAreBad.initializeInstance(this);
 	}
 }

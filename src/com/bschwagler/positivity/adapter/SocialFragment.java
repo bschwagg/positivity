@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bschwagler.positivity.GlobalsAreBad;
+import com.bschwagler.positivity.MainApplication;
 import com.bschwagler.positivity.R;
 import com.parse.ParseObject;
 
@@ -96,8 +97,9 @@ public class SocialFragment extends Fragment {
 			
 			if(adapter != null && list != null) {
 				
+				List<ParseObject> lb = ((MainApplication)getActivity().getApplication()).leaderBoard;
 				//Not yet loaded?
-				if(GlobalsAreBad.getInstance().leaderBoard.size() == 0) {
+				if(lb.size() == 0) {
 					Log.d("cloud", "Leaderboard can't update yet.. no data..");
 				}
 				else
@@ -108,7 +110,7 @@ public class SocialFragment extends Fragment {
 						spinner.setVisibility(ProgressBar.INVISIBLE);
 					list.clear();
 					int i = 0, highlightIndex = -1;
-					for(ParseObject p : GlobalsAreBad.getInstance().leaderBoard){
+					for(ParseObject p : lb){
 						if(userName != "" && userName.equals(p.getString("username")))
 							highlightIndex = i;
 						list.add("#" + ++i + " " +  p.getString("username") + " " + p.getInt("points")+ " pts" );
