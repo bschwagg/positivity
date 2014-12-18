@@ -50,7 +50,7 @@ public class SettingsFragment extends Fragment {
 		setupDailyAlarm(rootView); //implementation nicely buried in subclass
 		setupRandomAlarm(rootView, inflater); //implementation NOT nicely buried in subclass (TODO)
 		SetupWakeAlarm(rootView);
-		SetupMinsAlarm(rootView);
+		SetupMinsAlarm(rootView, inflater);
 		SetupLocationAlarm(rootView);
 		setupParams(rootView);
 
@@ -73,17 +73,42 @@ public class SettingsFragment extends Fragment {
 		});
 	}
 
-	private void SetupMinsAlarm(View rootView) {
-		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_minutes);
+	private void SetupMinsAlarm(View rootView, final LayoutInflater inflater) {
+		final CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_minutes);
+		GlobalsAreBad.getInstance().phoneUseAlarm = checkBox.isChecked(); //default
+		
 		checkBox.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v) {			
+				GlobalsAreBad.getInstance().phoneUseAlarm = checkBox.isChecked();
+				
 				//is  checked?
 				if (((CheckBox) v).isChecked()) {
-					Toast.makeText(getActivity().getApplicationContext(), "Minutes alarm not yet working!", Toast.LENGTH_SHORT).show();            
-				}
-				else {
-
+					
+					View npView = inflater.inflate(R.layout.number_picker, null);
+					final NumberPicker np = (NumberPicker) npView.findViewById(R.id.number_picker);
+					np.setMaxValue(30);
+					np.setMinValue(1);
+					np.setWrapSelectorWheel(false);
+					np.setValue(5);
+					AlertDialog ad = new AlertDialog.Builder(getActivity())
+					.setTitle("How many minutes of phone use before showing a message:")
+					.setView(npView)
+					.setPositiveButton("ok",
+							new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							GlobalsAreBad.getInstance().phoneUseAlarmMinutes = np.getValue();
+						}
+					})
+					.setNegativeButton("cancel",
+							new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							GlobalsAreBad.getInstance().phoneUseAlarm = false;
+							checkBox.setChecked(false);
+						}
+					})
+					.create();
+					ad.show();             
 				}
 			}
 		});

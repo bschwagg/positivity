@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/text_notif_times"
-            android:text="Daily time"
+            android:text="A specific time"
             android:textSize="18sp" />
 
         <CheckBox
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/alarm_random"
-            android:text="First use after wake-up"
+            android:text="First phone use of the day"
             android:textSize="18sp" />
 
         <CheckBox
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/alarm_minutes"
-            android:text="Location"
+            android:text="At a Location"
             android:textSize="18sp" />
 
         <TextView

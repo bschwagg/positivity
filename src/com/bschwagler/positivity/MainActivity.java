@@ -245,6 +245,22 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			@Override
 			public void onReceive(Context c, Intent i) {
 
+				//Do we have any special messages to handle?
+				Bundle extras = i.getExtras();
+				if(extras != null){
+					//Here we want to show the dialog immediately
+					if(i.getStringExtra("immediate") != null){
+						//pop up the dialog right away
+						Intent bgIntent = new Intent(c, BackgroundActivity.class);
+						startActivity( bgIntent );
+
+						//Here we want to pop up a toast message
+						String msg = i.getStringExtra("toastMsg");
+						if(msg != null)
+							Toast.makeText(c, msg, Toast.LENGTH_SHORT).show();       
+						return;
+					}
+				}
 				Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_128);
 
 				NotificationCompat.Builder mBuilder =
