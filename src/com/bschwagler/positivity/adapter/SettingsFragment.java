@@ -15,6 +15,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -89,17 +90,14 @@ public class SettingsFragment extends Fragment {
 	}
 
 	private void SetupWakeAlarm(View rootView) {
+			
 		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_wakeup);
+		GlobalsAreBad.getInstance().firstWakeAlarm = checkBox.isChecked(); //defaulto
 		checkBox.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				//is  checked?
-				if (((CheckBox) v).isChecked()) {
-					Toast.makeText(getActivity().getApplicationContext(), "Wake alarm not yet working!", Toast.LENGTH_SHORT).show();           
-				}
-				else {
-
-				}
+				GlobalsAreBad.getInstance().firstWakeAlarm = ((CheckBox) v).isChecked();
 			}
 		});
 	}

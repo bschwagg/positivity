@@ -94,8 +94,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		final SharedPreferences settings = this.getSharedPreferences("UserData", 0);
 		final String name = settings.getString("username", "");
 
-	
-
 		//Get ALL the leader board data..
 		if( querryRunning ) {
 			Log.d("cloud", "Still waiting on prior query to finish..");

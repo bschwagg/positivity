@@ -1,7 +1,10 @@
 package com.bschwagler.positivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
+import android.content.SharedPreferences;
 
 import com.parse.ParseObject;
 
@@ -14,10 +17,11 @@ public class GlobalsAreBad {
     public boolean vibEnabled;
     public boolean noiseEnabled;
     public List<ParseObject> leaderBoard;
-
 	public boolean useCountdown;
-
 	public ParseObject myParseObject;
+	public boolean firstWakeAlarm;
+	public boolean phoneUseAlarm;
+	public int phoneUseAlarmMinutes;
 
     protected GlobalsAreBad(){
     	leaderBoard = new ArrayList<ParseObject>();
