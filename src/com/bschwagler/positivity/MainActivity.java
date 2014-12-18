@@ -74,8 +74,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	BroadcastReceiver br;
 	AlarmManager am;
 	private boolean querryRunning = false;
-	private android.support.v4.app.Fragment mSettingsFrag;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -231,10 +229,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			actionBar.addTab(actionBar.newTab().setText(tab_name)
 					.setTabListener(this));
 		}
-		
-		//remember the settings info?
-		if(savedInstanceState!=null)
-			mSettingsFrag = getSupportFragmentManager().getFragment(savedInstanceState, tabs[1]);
 		
 
 		/**

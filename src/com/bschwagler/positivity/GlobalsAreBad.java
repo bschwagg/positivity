@@ -28,14 +28,14 @@ public class GlobalsAreBad implements Serializable {
 
 	private static GlobalsAreBad mInstance= null;
 
-	public boolean vibEnabled;
+	public boolean vibEnabled = true;
 	public boolean noiseEnabled;
-	public boolean useCountdown;
-	public boolean firstWakeAlarm;
+	public boolean useCountdown = true;
+	public boolean firstWakeAlarm = true;
 	public boolean phoneUseAlarm;
 	public int phoneUseAlarmMinutes;
 
-	public int numRandAlarms;
+	public int numRandAlarms = 3;
 
 	public ArrayList<Calendar> dailyAlarmList;
 

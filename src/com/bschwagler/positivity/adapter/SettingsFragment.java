@@ -199,7 +199,7 @@ public class SettingsFragment extends Fragment {
 					np.setWrapSelectorWheel(false);
 					np.setValue(3);
 					AlertDialog ad = new AlertDialog.Builder(getActivity())
-					.setTitle("Number of messages per day:")
+					.setTitle("Number of random messages per day:")
 					.setView(npView)
 					.setPositiveButton("ok",
 							new DialogInterface.OnClickListener() {
