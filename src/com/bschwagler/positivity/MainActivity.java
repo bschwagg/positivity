@@ -50,14 +50,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
 /**
- * @author Brad
+ * @author Brad    Date: Dec 19, 2014
  *
- *	This activity is in charge of creating the settings, leader board and dialog windows, 
+ * Class MainActivity.java Description: 
+ *  This activity is in charge of creating the settings tabs, leader board and dialog windows, 
  *	scheduling the timer with a (always on) background service, and managing
- *	the phrases to be displayed.  It will eventually synchronize events to 
- *	the cloud so a leader board can be displayed.
- *
+ *	the phrases to be displayed.  
+ *  
  */
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener  {
 
@@ -80,7 +81,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		setContentView(R.layout.main);
 
 		setupTabs(savedInstanceState);
-		setupAlarmReciever();
+		setupAlarmReceiver();
 		promptUserName(this); //all that's stored locally is the user name. 	
 	}
 	
@@ -105,6 +106,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	}
 	
 
+	/**
+	 * Starts the process of requesting leaderboard data and when it arrives updates appropriate widgets
+	 */
 	@SuppressWarnings("deprecation")
 	private void updateCloudLeaderBoard() {
 
@@ -147,6 +151,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		}
 	}
 
+	/**
+	 * Creates a new user entry in the cloud. Should be called only once
+	 * @param name User's name
+	 */
 	private void createNewCloudEntry(String name) {
 		ParseObject score = new ParseObject("Entry");
 		score.put("points",  0); //Reset score to nill!
@@ -259,7 +267,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	}
 
 
-	private void setupAlarmReciever() {
+	/**
+	 * This is the receiver to handle alarm events and update whatever widgets required
+	 */
+	private void setupAlarmReceiver() {
 
 		//Setup callback for the alarm
 		br = new BroadcastReceiver() {
@@ -331,6 +342,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	}
 
 
+	/**
+	 *  Activates feedback for vibration and audio alarms, depending on global settings
+	 */
 	private void doNotifFeedback() {
 		// Vibrate the mobile phone
 		if(Globals.getInstance().vibEnabled) {
@@ -360,23 +374,21 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	}
 
-	private void updateLeaderBoard() {
-		//Launch a timer example when the "Stats" tab is selected
-		//if(tab.getText() == "Stats") {
-		//A bit tricky to actually get a handle to the social leaderboard fragment.. 
-		android.support.v4.app.FragmentManager fragmentManager = this.getSupportFragmentManager();
-
-		List<android.support.v4.app.Fragment> fragments = fragmentManager.getFragments();
-		if(fragments != null) { //loaded yet
-			android.support.v4.app.Fragment lastFragment = fragments.get(fragments.size() - 1);
-
-			if(lastFragment != null && lastFragment.getClass().equals(SocialFragment.class))
-				((SocialFragment)lastFragment).update();
+	/**
+	 * Signal to the leaderboard fragment we have new data to update
+	 */
+	private void updateLeaderBoard() {	
+		SocialFragment socFrag = (SocialFragment)this.getSupportFragmentManager().findFragmentByTag(tabs[2]);
+		if(socFrag != null) {
+			socFrag.update();
 		}
-		//}
 	}
 
-	// Handle the button click. This callback is set from the layout, so we can access it
+	
+	/**
+	 *  Handle the test button click. This callback is set from the layout, so we can access it
+	 * @param v
+	 */
 	public void myButtonClickHandler(View v) 
 	{
 		final boolean useNotif = false;

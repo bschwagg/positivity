@@ -11,6 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+/**
+ * @author Brad    Date: Dec 19, 2014
+ *
+ * Class WelcomeFragment.java Description: 
+ *
+ * Simple fragment to view welcome information on start of application
+ *  
+ */
 public class WelcomeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

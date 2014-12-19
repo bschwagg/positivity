@@ -11,6 +11,15 @@ import com.parse.ParseUser;
 import android.app.Application;
 import android.util.Log;
 
+
+/**
+ * @author Brad    Date: Dec 19, 2014
+ *
+ * Class MainApplication.java Description: 
+ * Application to start activities. Used to initialize objects which need to be created only once
+ *
+ *  
+ */
 public class MainApplication extends Application {
 	public List<ParseObject> leaderBoard;
 	public ParseObject myParseObject;

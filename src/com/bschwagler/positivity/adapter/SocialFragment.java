@@ -24,6 +24,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * @author Brad    Date: Dec 19, 2014
+ *
+ * Class SocialFragment.java Description: 
+ *
+ * Manages leaderboard and other social info
+ *  
+ */
 public class SocialFragment extends Fragment {
 
 	View rootView;

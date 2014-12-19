@@ -21,6 +21,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
 
+/**
+ * @author Brad    Date: Dec 19, 2014
+ *
+ * Class BackgroundActivity.java Description: 
+ * 
+ * This is the activity that's run when a message notification arrives.
+ * It manages the message to be shown and UI
+ *  
+ */
 public class BackgroundActivity extends Activity {
 
 	//Stuff for Phrase Dialog

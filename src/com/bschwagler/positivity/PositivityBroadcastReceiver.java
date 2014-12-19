@@ -15,9 +15,15 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.widget.Toast;
 
+
 /**
- * @author Brad
+ * @author Brad    Date: Dec 19, 2014
  *
+ * Class PositivityBroadcastReceiver.java Description: 
+ *
+ * Handles any system event messages that need to be received, such as user logs in,
+ * locks device, location via wifi, etc. This class is a dispatch for other services/activities to run.
+ *  
  */
 public class PositivityBroadcastReceiver extends BroadcastReceiver {
 

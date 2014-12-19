@@ -4,6 +4,13 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.widget.Toast;
 
+/**
+ * @author Brad    Date: Dec 19, 2014
+ *
+ * Class PositivityService.java Description: 
+ *
+ *  TODO: any long running service lives here, such as ensuring the application is running daily
+ */
 public class PositivityService extends IntentService {
 
 	@Override

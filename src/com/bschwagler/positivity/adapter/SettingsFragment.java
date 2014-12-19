@@ -30,6 +30,14 @@ import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * @author Brad    Date: Dec 19, 2014
+ *
+ * Class SettingsFragment.java Description: 
+ *
+ * Manages UI for the settings page.
+ *  
+ */
 public class SettingsFragment extends Fragment {
 
 	private TextView randText;

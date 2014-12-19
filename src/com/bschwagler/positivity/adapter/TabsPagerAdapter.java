@@ -6,6 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
  
+/**
+ * @author Brad    Date: Dec 19, 2014
+ *
+ * Class TabsPagerAdapter.java Description: 
+ *
+ *  Adapter to manage viewing of the three tab fragments
+ *  
+ */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
  
     public TabsPagerAdapter(FragmentManager fm) {

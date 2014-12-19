@@ -20,6 +20,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+/**
+ * @author Brad    Date: Dec 19, 2014
+ *
+ * Class TimePickerFragment.java Description: 
+ *
+ *  Helper class to pick a time
+ *  
+ */
 public class TimePickerFragment extends DialogFragment
 implements TimePickerDialog.OnTimeSetListener {
 
