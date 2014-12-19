@@ -49,6 +49,6 @@ public class MainApplication extends Application {
 	protected void initSingletons()
 	{
 		// Initialize the instance of MySingleton
-		GlobalsAreBad.initializeInstance(this);
+		Globals.reloadInstance(this);
 	}
 }

@@ -3,7 +3,7 @@ package com.bschwagler.positivity.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bschwagler.positivity.GlobalsAreBad;
+import com.bschwagler.positivity.Globals;
 import com.bschwagler.positivity.MainApplication;
 import com.bschwagler.positivity.R;
 import com.parse.ParseObject;
@@ -31,6 +31,7 @@ public class SocialFragment extends Fragment {
 	ArrayAdapter<String> adapter;
 	ArrayList<String> list;
 	Activity act;
+	int highlightIndex = -1;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,6 +87,12 @@ public class SocialFragment extends Fragment {
 		
 		return rootView;
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+//		listView.smoothScrollToPosition(highlightIndex);
+	}
 
 	public void update() {
 		// Add a point to our score!
@@ -109,7 +116,7 @@ public class SocialFragment extends Fragment {
 					if(spinner != null)
 						spinner.setVisibility(ProgressBar.INVISIBLE);
 					list.clear();
-					int i = 0, highlightIndex = -1;
+					int i = 0;
 					for(ParseObject p : lb){
 						if(userName != "" && userName.equals(p.getString("username")))
 							highlightIndex = i;
@@ -118,9 +125,13 @@ public class SocialFragment extends Fragment {
 					}
 					adapter.notifyDataSetChanged();
 					//listView.requestFocusFromTouch(); // IMPORTANT!
-					TextView me = (TextView) listView.getChildAt(highlightIndex);
-					if(me != null)
-						me.setTextColor(Color.YELLOW);
+					
+					for(int c = 0; c < listView.getChildCount(); c++) {
+						TextView me = (TextView) listView.getChildAt(c);
+						if(me != null)
+							me.setTextColor((c==highlightIndex) ? Color.YELLOW : Color.WHITE);
+					}
+					adapter.notifyDataSetChanged();
 				}
 				
 			}

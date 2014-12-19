@@ -84,7 +84,7 @@ public class PhraseDialog extends DialogFragment  {
 						public void onClick(View v) {
 							
 							//Are they NOT using the countdown timer?
-							if( ! GlobalsAreBad.getInstance().useCountdown ) {
+							if( ! Globals.getInstance().useCountdown ) {
 								//just clean up
 								dialogFinishOK();
 								ad.dismiss();
@@ -120,7 +120,7 @@ public class PhraseDialog extends DialogFragment  {
 								@Override
 								public void onFinish() {
 									//Short shake to know the countdown is done..
-									if(GlobalsAreBad.getInstance().vibEnabled) {
+									if(Globals.getInstance().vibEnabled) {
 										Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 										if(vibrator != null)
 											vibrator.vibrate(100); 
@@ -169,7 +169,7 @@ public class PhraseDialog extends DialogFragment  {
 		if( pObj != null){
 			Log.d("cloud", "Saving score for " + pObj.getString("username") + " to the cloud!");
 			pObj.put("points", points);
-			pObj.put("countdown", GlobalsAreBad.getInstance().useCountdown);
+			pObj.put("countdown", Globals.getInstance().useCountdown);
 			pObj.saveInBackground();
 		}
 		

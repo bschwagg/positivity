@@ -2,7 +2,7 @@ package com.bschwagler.positivity.adapter;
 
 import java.util.Calendar;
 
-import com.bschwagler.positivity.GlobalsAreBad;
+import com.bschwagler.positivity.Globals;
 import com.bschwagler.positivity.R;
 import com.bschwagler.positivity.TimePickerFragment;
 
@@ -92,12 +92,12 @@ public class SettingsFragment extends Fragment {
 
 	private void SetupMinsAlarm(View rootView, final LayoutInflater inflater) {
 		final CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_minutes);
-		checkBox.setChecked( GlobalsAreBad.getInstance().phoneUseAlarm ); //default
+		checkBox.setChecked( Globals.getInstance().phoneUseAlarm ); //default
 		
 		checkBox.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {			
-				GlobalsAreBad.getInstance().phoneUseAlarm = checkBox.isChecked();
+				Globals.getInstance().phoneUseAlarm = checkBox.isChecked();
 				
 				//is  checked?
 				if (((CheckBox) v).isChecked()) {
@@ -114,13 +114,13 @@ public class SettingsFragment extends Fragment {
 					.setPositiveButton("ok",
 							new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
-							GlobalsAreBad.getInstance().phoneUseAlarmMinutes = np.getValue();
+							Globals.getInstance().phoneUseAlarmMinutes = np.getValue();
 						}
 					})
 					.setNegativeButton("cancel",
 							new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
-							GlobalsAreBad.getInstance().phoneUseAlarm = false;
+							Globals.getInstance().phoneUseAlarm = false;
 							checkBox.setChecked(false);
 						}
 					})
@@ -134,12 +134,12 @@ public class SettingsFragment extends Fragment {
 	private void SetupWakeAlarm(View rootView) {
 			
 		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_wakeup);
-		checkBox.setChecked( GlobalsAreBad.getInstance().firstWakeAlarm ); //defaulto
+		checkBox.setChecked( Globals.getInstance().firstWakeAlarm ); //defaulto
 		checkBox.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				//is  checked?
-				GlobalsAreBad.getInstance().firstWakeAlarm = ((CheckBox) v).isChecked();
+				Globals.getInstance().firstWakeAlarm = ((CheckBox) v).isChecked();
 			}
 		});
 	}
@@ -147,29 +147,29 @@ public class SettingsFragment extends Fragment {
 	private void setupParams(View rootView)
 	{	
 		CheckBox checkBoxVib = (CheckBox) rootView.findViewById(R.id.setting_vibrate);
-		checkBoxVib.setChecked( GlobalsAreBad.getInstance().vibEnabled  );
+		checkBoxVib.setChecked( Globals.getInstance().vibEnabled  );
 		checkBoxVib.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				GlobalsAreBad.getInstance().vibEnabled = isChecked;
+				Globals.getInstance().vibEnabled = isChecked;
 			}
 		});
 
 		CheckBox checkBoxAudio = (CheckBox) rootView.findViewById(R.id.setting_audio);
-		checkBoxAudio.setChecked( GlobalsAreBad.getInstance().noiseEnabled );
+		checkBoxAudio.setChecked( Globals.getInstance().noiseEnabled );
 		checkBoxAudio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				GlobalsAreBad.getInstance().noiseEnabled = isChecked;
+				Globals.getInstance().noiseEnabled = isChecked;
 			}
 		});
 		
 		CheckBox checkBoxCoutdown = (CheckBox) rootView.findViewById(R.id.setting_countdown);
-		checkBoxCoutdown.setChecked( GlobalsAreBad.getInstance().useCountdown );
+		checkBoxCoutdown.setChecked( Globals.getInstance().useCountdown );
 		checkBoxCoutdown.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				GlobalsAreBad.getInstance().useCountdown = isChecked;
+				Globals.getInstance().useCountdown = isChecked;
 			}
 		});
 	}
@@ -179,9 +179,9 @@ public class SettingsFragment extends Fragment {
 		randText = (TextView) rootView.findViewById(R.id.text_time_random);
 		
 		//Restore the state.
-		if(GlobalsAreBad.getInstance().numRandAlarms > 0) {
+		if(Globals.getInstance().numRandAlarms > 0) {
 			checkBox.setChecked(  true );
-			randText.setText(" ("+GlobalsAreBad.getInstance().numRandAlarms+" alarms)");
+			randText.setText(" ("+Globals.getInstance().numRandAlarms+" alarms)");
 		} else {
 			checkBox.setChecked(  false );
 			randText.setText("");
@@ -229,7 +229,7 @@ public class SettingsFragment extends Fragment {
 	}
 
 	private void setRandomAlarms(int num) {
-		 GlobalsAreBad.getInstance().numRandAlarms  = num;
+		 Globals.getInstance().numRandAlarms  = num;
 		String msg = "Alarms: ";
 		for(int i = 0; i < num; i++) {
 			int hour =(int) (Math.random() * 14.0f + 7.0f);//Assumption: Between 7am and 10pm
@@ -269,7 +269,7 @@ public class SettingsFragment extends Fragment {
 	private void cancelRandomAlarms()
 	{
 		String msg = "Canceled alarms: ";
-		for(int i = 0; i <  GlobalsAreBad.getInstance().numRandAlarms; i++) {
+		for(int i = 0; i <  Globals.getInstance().numRandAlarms; i++) {
 			PendingIntent pi = PendingIntent.getBroadcast( getActivity().getApplicationContext(), 10+i/*id*/, new Intent("com.bschwagler.wakeup"), 0 );
 			AlarmManager am = (AlarmManager)(getActivity().getApplicationContext().getSystemService( Context.ALARM_SERVICE ));
 			if(pi != null && am != null){
@@ -286,19 +286,19 @@ public class SettingsFragment extends Fragment {
 		CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_time);
 		
 		//restore checkbox
-		checkBox.setChecked(GlobalsAreBad.getInstance().dailyAlarmList.size() > 0);
+		checkBox.setChecked(Globals.getInstance().dailyAlarmList.size() > 0);
 		
 		checkBox.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				//is  checked?
 				if (((CheckBox) v).isChecked()) {
-					GlobalsAreBad.getInstance().dailyAlarmList.add( Calendar.getInstance() ); //TODO: replace
+					Globals.getInstance().dailyAlarmList.add( Calendar.getInstance() ); //TODO: replace
 					newFragment.show(getActivity().getFragmentManager(), "timePicker");   
 				}
 				else {
 					newFragment.cancelAlarm(); // (FIXED) Now not recursive on View change, since we're only monitoring clicks
-					GlobalsAreBad.getInstance().dailyAlarmList.clear(); //TODO: replace
+					Globals.getInstance().dailyAlarmList.clear(); //TODO: replace
 				}
 			}
 		});

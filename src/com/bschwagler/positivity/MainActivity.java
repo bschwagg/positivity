@@ -88,7 +88,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	protected void onPause()
 	{
 		super.onPause();
-		GlobalsAreBad.getInstance().saveToFile(this);
+		Globals.getInstance().saveToFile(this);
 	}
 	
 	@Override
@@ -96,7 +96,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	{
 		super.onDestroy();
 		//Couldn't get the fragment to automatically save. So this is brute force
-		GlobalsAreBad.getInstance().saveToFile(this);
+		Globals.getInstance().saveToFile(this);
 		
 //		if(pi != null && am != null)
 		//			am.cancel(pi);
@@ -151,7 +151,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		ParseObject score = new ParseObject("Entry");
 		score.put("points",  0); //Reset score to nill!
 		score.put("username",  name);
-		score.put("countdown",  GlobalsAreBad.getInstance().useCountdown ); 
+		score.put("countdown",  Globals.getInstance().useCountdown ); 
 		score.saveInBackground();
 		Log.d("cloud","Storing user entry ");
 
@@ -333,13 +333,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	private void doNotifFeedback() {
 		// Vibrate the mobile phone
-		if(GlobalsAreBad.getInstance().vibEnabled) {
+		if(Globals.getInstance().vibEnabled) {
 			Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 			if(vibrator != null)
 				vibrator.vibrate(800);
 		}
 
-		if(GlobalsAreBad.getInstance().noiseEnabled) {
+		if(Globals.getInstance().noiseEnabled) {
 			try {
 				Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION /*TYPE_ALARM*/);
 				Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);

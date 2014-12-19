@@ -32,7 +32,7 @@ public class PositivityBroadcastReceiver extends BroadcastReceiver {
 			final SharedPreferences settings = context.getSharedPreferences("UserData", 0);
 			int wakeAlarmDay = settings.getInt("wakeAlarmDay", -1);
 			int currDayNum = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-			if(GlobalsAreBad.getInstance().firstWakeAlarm && wakeAlarmDay != currDayNum){
+			if(Globals.getInstance().firstWakeAlarm && wakeAlarmDay != currDayNum){
 				
 				final String name = settings.getString("username", "");
 				Toast.makeText(context, "Good morning " + name, Toast.LENGTH_SHORT).show(); //TEST
@@ -45,9 +45,9 @@ public class PositivityBroadcastReceiver extends BroadcastReceiver {
 			}
 			
 			//Check the minutes-on-phone alarm if needed
-			if(GlobalsAreBad.getInstance().phoneUseAlarm){
-				fireOffAlarm(context, GlobalsAreBad.getInstance().phoneUseAlarmMinutes, 
-						"Already on phone " +  GlobalsAreBad.getInstance().phoneUseAlarmMinutes + " minutes");
+			if(Globals.getInstance().phoneUseAlarm){
+				fireOffAlarm(context, Globals.getInstance().phoneUseAlarmMinutes, 
+						"Already on phone " +  Globals.getInstance().phoneUseAlarmMinutes + " minutes");
 			}
 		} else if(true) //locks phone
 		{

@@ -17,16 +17,30 @@ import android.util.Log;
 
 import com.parse.ParseObject;
 
-//TODO Public settings. 
-//There's got to be a better way to do global variables? 
+// Public singleton container to hold persistent app settings 
 
-public class GlobalsAreBad implements Serializable {
-	/**
-	 * 
-	 */
+public class Globals implements Serializable {
+	// singleton accessor
+	public static synchronized Globals getInstance( ){
+		if(null == mInstance){
+				mInstance = new Globals();
+		}
+		return mInstance;
+	}
+	
+	//Initialization required with a Context to reload data
+	//Call this to restore the instance from file
+	public static synchronized Globals reloadInstance(Context c ){
+		if(null == mInstance){
+			if( !restoreFromFile(c) )
+				mInstance = new Globals();
+		}
+		return mInstance;
+	}
+	
 	private static final long serialVersionUID = 1L;
 
-	private static GlobalsAreBad mInstance= null;
+	private static Globals mInstance= null;
 
 	public boolean vibEnabled = true;
 	public boolean noiseEnabled;
@@ -39,21 +53,9 @@ public class GlobalsAreBad implements Serializable {
 
 	public ArrayList<Calendar> dailyAlarmList;
 
-	public GlobalsAreBad(){
+	protected Globals(){
 		
 		dailyAlarmList = new ArrayList<Calendar>();
-	}
-
-	public static synchronized GlobalsAreBad getInstance( ){
-		return mInstance;
-	}
-	
-	public static synchronized GlobalsAreBad initializeInstance(Context c ){
-		if(null == mInstance){
-			if( !restoreFromFile(c) )
-				mInstance = new GlobalsAreBad();
-		}
-		return mInstance;
 	}
 
 	public void saveToFile(Context c)
@@ -75,12 +77,11 @@ public class GlobalsAreBad implements Serializable {
 	{
 		FileInputStream fis;
 		ObjectInputStream is;
-		GlobalsAreBad simpleClass = null;
 		try {
 			fis = c.openFileInput("positivity");
 			try {
 				is = new ObjectInputStream(fis);
-				mInstance = (GlobalsAreBad) is.readObject();
+				mInstance = (Globals) is.readObject();
 				is.close();
 				Log.d("Error", "Restored global settings!");
 				return true;
