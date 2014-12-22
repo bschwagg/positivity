@@ -3,6 +3,7 @@ package com.bschwagler.positivity.adapter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import android.R.layout;
 import android.app.ActionBar.LayoutParams;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -17,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -56,8 +59,19 @@ public class SettingsFragment extends Fragment {
 	    //handle listview and assign adapter
 	    ListView lView = (ListView)rootView.findViewById(R.id.alarm_listview); 
 	    lView.setAdapter(adapter);
-	    adapter.update();
-	    //TODO: make the list height size dynamic. How?
+	    
+	    ViewTreeObserver vto = rootView.getViewTreeObserver(); 
+	    vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() { 
+	        @Override 
+	        public void onGlobalLayout() { 
+	            //Trick to call update AFTER the view has been created!
+	        	//This lets us updte the view with our times after the rest of the 
+	        	//screen has been updated
+	        	adapter.update();
+
+	        	rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this); 
+	        } 
+	    }); 
 	    
 		SetupWakeAlarm(rootView);
 		SetupMinsAlarm(rootView, inflater);
