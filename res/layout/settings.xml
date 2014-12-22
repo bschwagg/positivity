@@ -2,13 +2,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:background="#0a0a3b" >
+   >
 
     <RelativeLayout
         android:id="@+id/settings_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0a0a3b"
         android:orientation="vertical" >
 
         <TextView
@@ -22,7 +21,7 @@
             android:paddingTop="10dp"
             android:text="Notification Times"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="25sp" />
+            android:textSize="35sp" />
 
         <CheckBox
             android:id="@+id/alarm_random"
@@ -86,7 +85,7 @@
             android:paddingTop="10dp"
             android:text="General Settings"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="25sp" />
+            android:textSize="35sp" />
 
         <CheckBox
             android:id="@+id/setting_vibrate"
@@ -110,6 +109,7 @@
 
         <Button
             android:id="@+id/test_msg_button"
+            android:background="@drawable/button_shadow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/setting_countdown"

@@ -133,7 +133,7 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 		ListView lView = (ListView)((Activity)context).findViewById(R.id.alarm_listview);
 		if(lView != null){
 			RelativeLayout.LayoutParams rlo = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, (Globals.getInstance().dailyAlarmList.size()+1)*itemHeight);
-			rlo.topMargin = 130;
+			rlo.topMargin = 180;
 			lView.setLayoutParams(rlo);
 		}
 		notifyDataSetChanged();
