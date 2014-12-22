@@ -67,7 +67,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	private TabsPagerAdapter mAdapter;
 	private ActionBar actionBar;
 	// Tab titles
-	private String[] tabs = { "Welcome", "Settings", "Stats" /*TBD: leader board?*/ };
+	private String[] tabs = { "Welcome", "Settings", "Social" };
 	private int msgCount = 0;
 
 	//Stuff for alarm and timer dialog
