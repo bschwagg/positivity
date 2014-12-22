@@ -1,6 +1,7 @@
 package com.bschwagler.positivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com.parse.Parse;
@@ -35,7 +36,7 @@ public class MainApplication extends Application {
 	}
 
 	private void initParse() {
-		
+
 		Log.d("cloud", "Initializing PARSE");
 		Parse.enableLocalDatastore(this);
 		// Initialize for our Dashboard ID..
@@ -59,5 +60,12 @@ public class MainApplication extends Application {
 	{
 		// Initialize the instance of MySingleton
 		Globals.reloadInstance(this);
+
+		//always have a dummy entry in the list where all we can do is add
+		if(Globals.getInstance().dailyAlarmList.size() == 0){
+			Calendar dummy = Calendar.getInstance();
+			dummy.setTimeInMillis( 0 );
+			Globals.getInstance().dailyAlarmList.add(  dummy );
+		}
 	}
 }

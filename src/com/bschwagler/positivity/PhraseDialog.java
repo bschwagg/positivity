@@ -59,7 +59,7 @@ public class PhraseDialog extends DialogFragment  {
 
 			builder.setView(view);
 			builder.setCancelable(false);
-			builder.setPositiveButton("Got it!", null );
+			builder.setPositiveButton("Start!", null );
 
 			builder.setNegativeButton("Later      ", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {

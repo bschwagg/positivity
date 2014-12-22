@@ -37,47 +37,45 @@ implements TimePickerDialog.OnTimeSetListener {
 	public boolean wasCancelled;
 	TextView tv;
 	CheckBox checkBox;
+	AlarmListAdapter aa;
 
+	 /**
+	 * 
+	 */
+	public TimePickerFragment(AlarmListAdapter a) {
+		aa = a;
+	}
+	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		//get a handle to the widgets we're modifying when cancelled
-		tv = (TextView)(getActivity().findViewById(R.id.text_time_daily));
-		checkBox = (CheckBox) getActivity().findViewById(R.id.alarm_time);
 
 		// Use the current time as the default values for the picker
 		final Calendar c = Calendar.getInstance();
 		int hour = c.get(Calendar.HOUR_OF_DAY);
 		int minute = c.get(Calendar.MINUTE);
 
-		pi = PendingIntent.getBroadcast( getActivity(), 1/*id*/, new Intent("com.bschwagler.wakeup"), 0 );
-		am = (AlarmManager)(getActivity().getSystemService( Context.ALARM_SERVICE ));
+		
 
 		// Create a new instance of TimePickerDialog and return it
 		TimePickerDialog tpDialog = new TimePickerDialog(getActivity(), this, hour, minute,
 				DateFormat.is24HourFormat(getActivity()));
 
 		//For some reason the only way to intercept "cancel" button is this way.  Android limitation.
-		tpDialog.setButton(DialogInterface.BUTTON_NEGATIVE, ("cancel"), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				if (which == DialogInterface.BUTTON_NEGATIVE) {
-					cancelAlarm();
-				}
-				Toast.makeText(getActivity().getApplicationContext(), "CLicked " + which, Toast.LENGTH_SHORT).show();
-			}
-		});
+		//		tpDialog.setButton(DialogInterface.BUTTON_NEGATIVE, ("cancel"), new DialogInterface.OnClickListener() {
+		//			public void onClick(DialogInterface dialog, int which) {
+		//				if (which == DialogInterface.BUTTON_NEGATIVE) {
+		//					//nothing done
+		//				}
+		//				Toast.makeText(getActivity().getApplicationContext(), "CLicked " + which, Toast.LENGTH_SHORT).show();
+		//			}
+		//		});
 
 		return tpDialog;
 	}
 
 	public void onTimeSet(TimePicker view, int hourOfDaySel, int minuteSel) {
 		// Do something with the time chosen by the user
-		TextView tv = (TextView)(getActivity().findViewById(R.id.text_time_daily));
-		String tod = (hourOfDaySel > 12) ? " PM":" AM";
-		String min = (minuteSel < 10) ? ("0") : "";
-		min += minuteSel;
-		tv.setText("  " + (hourOfDaySel%12)+":"+min+ tod);
-
 		final Calendar now = Calendar.getInstance();
 		
 		Calendar calendar = Calendar.getInstance();
@@ -89,21 +87,13 @@ implements TimePickerDialog.OnTimeSetListener {
 		if(calendar.before(now))
 			calendar.add(Calendar.DAY_OF_YEAR, 1); //Don't trigger if time is earlier in the day!
 
+		Globals.getInstance().dailyAlarmList.add( calendar );
+		aa.update(); //refresh view
+		
+		//TODO: Make a global alarm manager class
+		pi = PendingIntent.getBroadcast( getActivity(), (int)calendar.getTimeInMillis()/*id*/, new Intent("com.bschwagler.wakeup"), 0 );
+		am = (AlarmManager)(getActivity().getSystemService( Context.ALARM_SERVICE ));
 		am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
 
-	}
-
-	//Clean up when cancelled
-	public void cancelAlarm()
-	{
-		if(am!=null)
-			am.cancel(pi);
-
-		if(tv!=null)
-			tv.setText("");
-
-
-		if(checkBox != null)
-			checkBox.setChecked(false);
 	}
 }

@@ -18,6 +18,8 @@ import android.util.Log;
 import com.parse.ParseObject;
 
 // Public singleton container to hold persistent app settings 
+//Database would be a good option. 
+//Mike recommended: https://github.com/pardom/ActiveAndroid (or https://bitbucket.org/qbusict/cupboard)
 
 public class Globals implements Serializable {
 	// singleton accessor
