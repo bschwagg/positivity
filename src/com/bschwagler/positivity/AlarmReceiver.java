@@ -46,6 +46,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 		boolean immediate = false;
 		if(inExtras != null){
 			//Here we want to show the dialog immediately
+			if(inExtras.getString("com.parse.Data") != null){
+				Toast.makeText(c, "PARSE: " + inExtras.getString("com.parse.Data"), Toast.LENGTH_LONG).show();
+			}
+		
 			if(i.getStringExtra("immediate") != null){
 				//pop up the dialog right away
 				outExtras.putString("immediate", "true");

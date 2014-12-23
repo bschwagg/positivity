@@ -77,7 +77,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		ParseAnalytics.trackAppOpened(getIntent());
+		
 		setupTabs();
 		setupAlarmReceiver();
 		promptUserName(this); //all that's stored locally is the user name. 

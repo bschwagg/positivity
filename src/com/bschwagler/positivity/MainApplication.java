@@ -6,8 +6,13 @@ import java.util.List;
 
 import com.parse.Parse;
 import com.parse.ParseACL;
+import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseUser;
+import com.parse.PushService;
+import com.parse.SaveCallback;
 
 import android.app.Application;
 import android.util.Log;
@@ -44,7 +49,21 @@ public class MainApplication extends Application {
 
 
 		ParseUser.enableAutomaticUser();
-		ParseUser.getCurrentUser().saveInBackground(); 
+		//ParseInstallation.getCurrentInstallation().saveInBackground(); //lets PUSH requests go through
+		//ParseUser.getCurrentUser().saveInBackground(); 
+		ParsePush.subscribeInBackground("", new SaveCallback() {
+			@Override
+			public void done(ParseException e) {
+				if (e == null) {
+					Log.d("com.parse.push", "successfully subscribed to the broadcast channel.");
+				} else {
+					Log.e("com.parse.push", "failed to subscribe for push", e);
+				}
+			}
+		});
+		
+		PushService.setDefaultPushCallback(this,  BackgroundActivity.class);
+		
 		ParseACL defaultACL = new ParseACL();
 		// If you would like all objects to be private by default, remove this line.
 		defaultACL.setPublicReadAccess(true);
