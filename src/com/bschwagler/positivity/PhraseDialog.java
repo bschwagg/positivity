@@ -174,13 +174,14 @@ public class PhraseDialog extends DialogFragment  {
 		SharedPreferences settings = getActivity().getSharedPreferences("UserData", 0);
 		int points = settings.getInt("points", 0);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt("points", points+1);
+		points++;
+		editor.putInt("points", points );
 		editor.commit();
 		
 		ParseObject pObj = ((MainApplication)getActivity().getApplication()).myParseObject;
 		
 		if( pObj != null){
-			Log.d("cloud", "Saving score for " + pObj.getString("username") + " to the cloud!");
+			Log.d("cloud", "Saving score " + points + " for " + pObj.getString("username") + " to the cloud!");
 			pObj.put("points", points);
 			pObj.put("countdown", Globals.getInstance().useCountdown);
 			pObj.saveInBackground();

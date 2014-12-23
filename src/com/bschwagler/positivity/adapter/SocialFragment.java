@@ -163,7 +163,10 @@ public class SocialFragment extends Fragment {
 							highlightIndex = i;
 							Log.d("cloud", "Found " + p.getString("username") + " at index " + Integer.toString(i));
 							entry = "<strong style='font-size:200%'>"+entry + "</strong><br><i style='padding-left:0 8px'>&ensp&ensp&ensp ";
-							entry += getNiceQuote();
+							if(p.getInt("points")==0)
+								entry += "Click 'Add New Time' from the settings menu. Then you can start getting points to track your progress!";
+							else
+								entry += getNiceQuote();
 							entry += "</i>";
 						}
 						list.add(Html.fromHtml(entry));
