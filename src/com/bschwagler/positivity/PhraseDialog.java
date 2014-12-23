@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.NotificationManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,12 +73,19 @@ public class PhraseDialog extends DialogFragment  {
 			// Create the AlertDialog object and return it
 			 ad = builder.create();
 
+			 
 			ad.setOnShowListener(new DialogInterface.OnShowListener() {
 
 				@Override
 				public void onShow(DialogInterface dialog) {
 					final Button b = ad.getButton(AlertDialog.BUTTON_POSITIVE);
 
+					//Initialize the data
+					startedCountdown=false;
+					if(mCountDownTimer!=null)
+						mCountDownTimer.cancel();
+					isShowing = false;
+					
 					b.setOnClickListener(new View.OnClickListener() {
 
 						@Override
@@ -114,7 +122,12 @@ public class PhraseDialog extends DialogFragment  {
 									mProgressStatus--;
 									progBar.setProgress(mProgressStatus);
 									String progressStr = "" + mProgressStatus;
-									count.setText(progressStr);
+									if(mProgressStatus <= 1){
+										progressStr = "&#9786"; //smiley face
+										count.setText(Html.fromHtml(progressStr));
+									} else {
+										count.setText(progressStr);
+									}
 								}
 
 								@Override
