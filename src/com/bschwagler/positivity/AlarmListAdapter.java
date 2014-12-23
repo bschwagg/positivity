@@ -106,8 +106,14 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 			@Override
 			public void onClick(View v) { 
 				//do something
+				long t = Globals.getInstance().dailyAlarmList.get(position).getTimeInMillis();
 				Globals.getInstance().dailyAlarmList.remove(position);
 				update();
+				//Remove the alarm which will fire off our AlarmReceiver..
+				Intent intent = new Intent(context /*MainActivity.this*/, AlarmReceiver.class);
+				PendingIntent pi = PendingIntent.getBroadcast( context /*MainActivity.this*/, (int) t, intent, /*PendingIntent.FLAG_UPDATE_CURRENT)*/	0 );
+				AlarmManager am = (AlarmManager)(context.getSystemService( Context.ALARM_SERVICE ));
+				am.cancel(pi);	
 			}
 		});
 		addBtn.setOnClickListener(new View.OnClickListener(){

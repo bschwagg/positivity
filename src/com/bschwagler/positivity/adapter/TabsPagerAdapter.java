@@ -33,6 +33,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int index) {
  
+    	Log.d("tabs","Creating " + Integer.toString( index ));
     	Fragment f = null;
         switch (index) {
         case 0:

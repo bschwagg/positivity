@@ -108,6 +108,8 @@ public class SettingsFragment extends Fragment {
 		final CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.alarm_minutes);
 		checkBox.setChecked( Globals.getInstance().phoneUseAlarm ); //default
 
+		if( Globals.getInstance().phoneUseAlarm)
+			checkBox.setText("After " + Integer.toString( Globals.getInstance().phoneUseAlarmMinutes ) + " minutes using phone");
 		
 		checkBox.setOnClickListener(new OnClickListener() {
 			@Override

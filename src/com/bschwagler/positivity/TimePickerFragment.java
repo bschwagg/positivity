@@ -90,10 +90,18 @@ implements TimePickerDialog.OnTimeSetListener {
 		Globals.getInstance().dailyAlarmList.add( calendar );
 		aa.update(); //refresh view
 		
-		//TODO: Make a global alarm manager class
-		pi = PendingIntent.getBroadcast( getActivity(), (int)calendar.getTimeInMillis()/*id*/, new Intent("com.bschwagler.wakeup"), 0 );
-		am = (AlarmManager)(getActivity().getSystemService( Context.ALARM_SERVICE ));
-		am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
-
+		//Would like to make a global alarm manager class. However can't access main Activity. How? TODO
+			
+		//Create an alarm which will fire off our AlarmReceiver..
+		Intent intent = new Intent(getActivity() /*MainActivity.this*/, AlarmReceiver.class);
+		//				Bundle extras = new Bundle();
+		//				extras.putString("immediate", "true"); //pass a flag that we want to pop up the dialog right away. No notification manager.
+		//				intent.putExtras(extras);
+		//extras.putString("toastMsg", toastMsg);
+		//store ID by calendar time in milliseconds
+		PendingIntent pi = PendingIntent.getBroadcast( getActivity() /*MainActivity.this*/, (int) calendar.getTimeInMillis(), intent, /*PendingIntent.FLAG_UPDATE_CURRENT)*/	0 );
+		AlarmManager am = (AlarmManager)(getActivity().getSystemService( Context.ALARM_SERVICE ));
+		//am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()/*ms*/, pi ); //single shot alarm
+		am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()/*ms*/, AlarmManager.INTERVAL_DAY, pi); //daily alarm	
 	}
 }

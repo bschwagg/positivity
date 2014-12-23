@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -53,15 +54,16 @@ public class PositivityBroadcastReceiver extends BroadcastReceiver {
 			//Check the minutes-on-phone alarm if needed
 			if(Globals.getInstance().phoneUseAlarm){
 				fireOffAlarm(context, Globals.getInstance().phoneUseAlarmMinutes, 
-						"Already on phone " +  Globals.getInstance().phoneUseAlarmMinutes + " minutes");
+						"Already on phone " +  Globals.getInstance().phoneUseAlarmMinutes + " minutes..");
 			}
-		} else if(true) //locks phone
-		{
-			//TODO: cancel alarm
+		} else if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF)){		 //locks phone
+			Log.d("phone use", "Canceling phone usage alarm");
+			cancelAlarm(context);
 		}
 	}
 
-	private void fireOffAlarm(Context c, int seconds, String toastMsg) {	
+	private void fireOffAlarm(Context c, int seconds, String toastMsg) 
+	{	
 		//Create an intent to open up the background activity immediately
 		//Don't put it in the task bar thing
 		//no need to fire off vibration and noise
@@ -69,7 +71,7 @@ public class PositivityBroadcastReceiver extends BroadcastReceiver {
 		//		bgIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		//		c.startActivity( bgIntent );	
 		//		
-		Intent broadcast_intent = new Intent("com.bschwagler.wakeup");
+		Intent broadcast_intent = new Intent(c /*MainActivity.this*/, AlarmReceiver.class);
 		Bundle extras = new Bundle();
 		
 		extras.putString("immediate", "true"); //pass a flag that we want to pop up the dialog right away. No notification manager.
@@ -79,6 +81,15 @@ public class PositivityBroadcastReceiver extends BroadcastReceiver {
 		PendingIntent pi = PendingIntent.getBroadcast( c, 100, broadcast_intent, 0 );
 		AlarmManager am = (AlarmManager)(c.getSystemService( Context.ALARM_SERVICE ));
 		am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + seconds*60*1000 /*ms*/, pi );
+	}
+	
+	private void cancelAlarm(Context c)
+	{
+		Intent broadcast_intent = new Intent(c /*MainActivity.this*/, AlarmReceiver.class);
+		PendingIntent pi = PendingIntent.getBroadcast( c, 100, broadcast_intent, 0 );
+		AlarmManager am = (AlarmManager)(c.getSystemService( Context.ALARM_SERVICE ));
+		am.cancel(pi);
+	
 	}
 
 }

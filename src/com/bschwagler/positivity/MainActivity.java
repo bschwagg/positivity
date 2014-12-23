@@ -68,47 +68,38 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	private ActionBar actionBar;
 	SocialFragment socFrag;
 	private MainActivity activity;
-	
+
 	// Tab titles
 	private String[] tabs = { "Welcome", "Settings", "Social" };
-	private int msgCount = 0;
 
-	//Stuff for alarm and timer dialog
-	PendingIntent pi;
-	BroadcastReceiver br;
-	AlarmManager am;
 	private boolean querryRunning = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		setupTabs(savedInstanceState);
+		setupTabs();
 		setupAlarmReceiver();
 		promptUserName(this); //all that's stored locally is the user name. 
 		activity = this;
 	}
-	
+
 	@Override
 	protected void onPause()
 	{
 		super.onPause();
 		Globals.getInstance().saveToFile(this);
+
 	}
-	
+
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
 		//Couldn't get the fragment to automatically save. So this is brute force
 		Globals.getInstance().saveToFile(this);
-		
-//		if(pi != null && am != null)
-		//			am.cancel(pi);
-		//		if(br != null)
-		//		unregisterReceiver(br);
 	}
-	
+
 
 	/**
 	 * Starts the process of requesting leaderboard data and when it arrives updates appropriate widgets
@@ -136,7 +127,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 						Log.d("cloud", "Retrieved " + scoreList.size() + " scores");
 						((MainApplication)getApplication()).leaderBoard.clear();
 						((MainApplication)getApplication()).leaderBoard.addAll(scoreList); //save to our leader board!
-						
+
 						//TEST: print the leaderboard
 						for(ParseObject p : scoreList) {
 							//Log.d("cloud", "Cloud Info: Name: " + p.getString("username") + " Score: " + p.getInt("points") + " Countdown: " + p.getBoolean("countdown")); //TEST
@@ -145,7 +136,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 								Log.d("cloud", "Found myself in the cloud");
 							}
 						}
-					
+
 						updateLeaderBoard();
 					} else {
 						Log.d("cloud", "Error: Unable to download leader board from cloud.  Error:" + e.getMessage());
@@ -230,8 +221,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	// Initialize tabs
 	@SuppressWarnings("deprecation")
-	private void setupTabs(Bundle savedInstanceState)
+	private void setupTabs()
 	{
+		Log.d("main","Setup tabs");
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		actionBar = getActionBar();
 		mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
@@ -245,10 +237,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			actionBar.addTab(actionBar.newTab().setText(tab_name)
 					.setTabListener(this));
 		}
-		
 
-		socFrag = (SocialFragment) mAdapter.getFragment(2);
-		
+		updateLeaderBoard(); //try and force refresh on screen orientation change
+
 
 		/**
 		 * on swiping the viewpager make respective tab selected
@@ -264,7 +255,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				Log.d("main", "On page " + Integer.toString(position));
 				if(position==2)
 					updateCloudLeaderBoard();  //Begin to refresh the stats!
-				}
+			}
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
@@ -282,74 +273,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	 * This is the receiver to handle alarm events and update whatever widgets required
 	 */
 	private void setupAlarmReceiver() {
-
-		//Setup callback for the alarm
-		br = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context c, Intent i) {
-
-				//Do we have any special messages to handle?
-				Bundle extras = i.getExtras();
-				if(extras != null){
-					//Here we want to show the dialog immediately
-					if(i.getStringExtra("immediate") != null){
-						//pop up the dialog right away
-						Intent bgIntent = new Intent(c, BackgroundActivity.class);
-						startActivity( bgIntent );
-
-						//Here we want to pop up a toast message
-						String msg = i.getStringExtra("toastMsg");
-						if(msg != null)
-							Toast.makeText(c, msg, Toast.LENGTH_SHORT).show();       
-						return;
-					}
-				}
-				Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_128);
-
-				NotificationCompat.Builder mBuilder =
-						new NotificationCompat.Builder(c)
-
-				.setSmallIcon(R.drawable.ic_launcher_24)
-				.setLargeIcon(bm)
-				//				.setContentText("Hello World!");
-				.setContentTitle("Positivity");
-
-				// Creates an explicit intent for an Activity in your app
-				Intent resultIntent = new Intent(c, BackgroundActivity.class);
-
-				// Sets the Activity to start in a new, empty task
-				resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				resultIntent.putExtra("notificationId", msgCount); //store ID so we can cancel the notif
-
-				PendingIntent resultPendingIntent =
-						PendingIntent.getActivity(
-								c,
-								0,
-								resultIntent,
-								PendingIntent.FLAG_UPDATE_CURRENT);
-
-				mBuilder.setContentIntent(resultPendingIntent);
-				//pop the notification in heads up on top of screen, similar to incoming calls
-				//TODO: may have to setup ringtone or vibration to make this work as well
-				mBuilder.setPriority(NotificationCompat.PRIORITY_MAX); 
-				//mBuilder.setVisibility(Notification.VISIBILITY_PUBLIC); //android 5.0 lock screen feature
-				NotificationManager mNotificationManager =
-						(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-				// mId allows you to update the notification later on.
-				mNotificationManager.notify(msgCount, mBuilder.build());
-
-				doNotifFeedback();
-
-				msgCount++; //Essentially a UID
-				//				Toast.makeText(c, "Notification " + msgCount + " sent", Toast.LENGTH_SHORT).show(); //TEST
-				//The notification will then start a special service. The service is detached 
-				//see: https://developer.android.com/guide/topics/ui/notifiers/notifications.html
-			}
-
-
-		};
-		registerReceiver(br, new IntentFilter("com.bschwagler.wakeup") );
-
 	}
 
 
@@ -389,8 +312,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	 * Signal to the leaderboard fragment we have new data to update
 	 */
 	private void updateLeaderBoard() {	
-		
-		socFrag = (SocialFragment) mAdapter.getFragment(2);
+
+		if(mAdapter!=null && socFrag == null)
+			socFrag = (SocialFragment) mAdapter.getFragment(2);
 		if(socFrag != null) {
 			socFrag.update();
 		} else {
@@ -398,26 +322,24 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		}
 	}
 
-	
+
 	/**
 	 *  Handle the test button click. This callback is set from the layout, so we can access it
 	 * @param v
 	 */
 	public void myButtonClickHandler(View v) 
 	{
-		final boolean useNotif = false;
-		if(useNotif) {
-			//Test the dialog box in .5 seconds
-			pi = PendingIntent.getBroadcast( this, 0, new Intent("com.bschwagler.wakeup"),
-					0 );
-			am = (AlarmManager)(this.getSystemService( Context.ALARM_SERVICE ));
-			am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 500 /*ms*/, pi );
-		} else {
-			//Create an intent to open up the background activity, which contains the msg dialog
-			doNotifFeedback();
-			Intent bgIntent = new Intent(this, BackgroundActivity.class);
-			startActivity( bgIntent );
-		}
+		//Create an alarm which will fire off our AlarmReceiver..
+		Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+		Bundle extras = new Bundle();
+		extras.putString("immediate", "true"); //pass a flag that we want to pop up the dialog right away. No notification manager.
+		intent.putExtras(extras);
+		//extras.putString("toastMsg", toastMsg);
+		PendingIntent pi = PendingIntent.getBroadcast( MainActivity.this, 0, intent, /*PendingIntent.FLAG_UPDATE_CURRENT)*/	0 );
+		AlarmManager am = (AlarmManager)(this.getSystemService( Context.ALARM_SERVICE ));
+		am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()/*ms*/, pi ); //single shot alarm
+		//am.setRepeating(AlarmManager.RTC_WAKEUP, /*ms*/, AlarmManager.INTERVAL_DAY, pi); //daily alarm
+
 	}
 
 	@Override
@@ -438,7 +360,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	public void onComplete() {
 		Log.d("main", "Just got notification that the social tab is ready for updating");
 		updateLeaderBoard();	
-		
+
 	}
 
 

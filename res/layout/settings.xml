@@ -109,16 +109,17 @@
 
         <Button
             android:id="@+id/test_msg_button"
-            android:background="@drawable/button_shadow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/setting_countdown"
             android:layout_centerInParent="true"
             android:layout_marginLeft="25dp"
+            android:background="@drawable/button_shadow"
             android:minHeight="24dp"
             android:onClick="myButtonClickHandler"
             android:text="Test Message"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="gone" />
 
         <CheckBox
             android:id="@+id/setting_countdown"
