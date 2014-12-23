@@ -60,12 +60,15 @@ import android.widget.Toast;
  *	the phrases to be displayed.  
  *  
  */
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener  {
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener , SocialFragment.OnCompleteListener {
 
 	//Stuff for pages and tabs
 	private ViewPager viewPager;
 	private TabsPagerAdapter mAdapter;
 	private ActionBar actionBar;
+	SocialFragment socFrag;
+	private MainActivity activity;
+	
 	// Tab titles
 	private String[] tabs = { "Welcome", "Settings", "Social" };
 	private int msgCount = 0;
@@ -82,7 +85,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 		setupTabs(savedInstanceState);
 		setupAlarmReceiver();
-		promptUserName(this); //all that's stored locally is the user name. 	
+		promptUserName(this); //all that's stored locally is the user name. 
+		activity = this;
 	}
 	
 	@Override
@@ -132,7 +136,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 						Log.d("cloud", "Retrieved " + scoreList.size() + " scores");
 						((MainApplication)getApplication()).leaderBoard.clear();
 						((MainApplication)getApplication()).leaderBoard.addAll(scoreList); //save to our leader board!
-						updateLeaderBoard();
+						
 						//TEST: print the leaderboard
 						for(ParseObject p : scoreList) {
 							//Log.d("cloud", "Cloud Info: Name: " + p.getString("username") + " Score: " + p.getInt("points") + " Countdown: " + p.getBoolean("countdown")); //TEST
@@ -141,6 +145,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 								Log.d("cloud", "Found myself in the cloud");
 							}
 						}
+					
+						updateLeaderBoard();
 					} else {
 						Log.d("cloud", "Error: Unable to download leader board from cloud.  Error:" + e.getMessage());
 					}
@@ -216,6 +222,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				}
 			})
 			.show();
+		} else {
+			viewPager.setCurrentItem( 2 ); //Jump to the social leaderboard if we've already registered
 		}
 
 	}
@@ -239,6 +247,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		}
 		
 
+		socFrag = (SocialFragment) mAdapter.getFragment(2);
+		
+
 		/**
 		 * on swiping the viewpager make respective tab selected
 		 * */
@@ -250,10 +261,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				// make respected tab selected
 				actionBar.setSelectedNavigationItem(position);
 				//cloud storage for the leader board. Stored locally until updated.  This keeps the network traffic fairly low
+				Log.d("main", "On page " + Integer.toString(position));
 				if(position==2)
-					updateCloudLeaderBoard(); 
-
-			}
+					updateCloudLeaderBoard();  //Begin to refresh the stats!
+				}
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
@@ -378,9 +389,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	 * Signal to the leaderboard fragment we have new data to update
 	 */
 	private void updateLeaderBoard() {	
-		SocialFragment socFrag = (SocialFragment)this.getSupportFragmentManager().findFragmentByTag(tabs[2]);
+		
+		socFrag = (SocialFragment) mAdapter.getFragment(2);
 		if(socFrag != null) {
 			socFrag.update();
+		} else {
+			Log.d("cloud", "Leaderboard unable to refresh due to social frag not loaded");
 		}
 	}
 
@@ -415,6 +429,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 
+	}
+
+	/* (non-Javadoc)
+	 * @see com.bschwagler.positivity.adapter.SocialFragment.OnCompleteListener#onComplete()
+	 */
+	@Override
+	public void onComplete() {
+		Log.d("main", "Just got notification that the social tab is ready for updating");
+		updateLeaderBoard();	
+		
 	}
 
 

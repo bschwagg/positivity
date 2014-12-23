@@ -11,8 +11,11 @@ import com.parse.ParseObject;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +26,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
 
 /**
  * @author Brad    Date: Dec 19, 2014
@@ -36,11 +41,28 @@ public class SocialFragment extends Fragment {
 
 	View rootView;
 	ListView listView;
-	ArrayAdapter<String> adapter;
-	ArrayList<String> list;
+	ArrayAdapter<Spanned> adapter;
+	ArrayList<Spanned> list = new ArrayList<Spanned>(); //Use HTML for the string, ie "Spanned"
 	Activity act;
 	int highlightIndex = -1;
 
+	
+	public static interface OnCompleteListener {
+	    public abstract void onComplete();
+	}
+
+	private OnCompleteListener mListener;
+
+	public void onAttach(Activity activity) {
+	    super.onAttach(activity);
+	    try {
+	        this.mListener = (OnCompleteListener)activity;
+	    }
+	    catch (final ClassCastException e) {
+	        throw new ClassCastException(activity.toString() + " must implement OnCompleteListener");
+	    }
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -50,8 +72,6 @@ public class SocialFragment extends Fragment {
 		// Get ListView object from xml
 		listView = (ListView) rootView.findViewById(R.id.list_leaderbaord);
 
-		
-		list = new ArrayList<String>();
 		 
 		// Define a new Adapter
 		// First parameter - Context
@@ -59,7 +79,7 @@ public class SocialFragment extends Fragment {
 		// Third parameter - ID of the TextView to which the data is written
 		// Forth - the Array of data
 
-		adapter = new ArrayAdapter<String>(getActivity(),
+		adapter = new ArrayAdapter<Spanned>(getActivity(),
 				android.R.layout.simple_list_item_1, android.R.id.text1, list);
 
 
@@ -91,15 +111,26 @@ public class SocialFragment extends Fragment {
          }); 
 		 */
 		
-		update(); //try an update. If it doesn't work then later, when the data is downloaded, it will try updating again
-		
 		return rootView;
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.d("social", "About to signal the social frag is loaded");
+		mListener.onComplete();
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
 //		listView.smoothScrollToPosition(highlightIndex);
+	}
+	
+	public String getNiceQuote() {
+		String[] q = {"Nice!","Keep it up!","Good job!","You're on your way!","Looking good!","Keep with it","Keep on going", "Happiness is on the rise","Success is in continuity",
+				"Lah-di-dah","Rock on","Awesome","Keep on climbin' up","Great work","Oh yeah","Very nice","Nice!","booyah"};
+		return q[ (int)(Math.random() * (double)q.length) ];
 	}
 
 	public void update() {
@@ -126,23 +157,27 @@ public class SocialFragment extends Fragment {
 					list.clear();
 					int i = 0;
 					for(ParseObject p : lb){
-						if(userName != "" && userName.equals(p.getString("username")))
+						i++;
+						String entry = "#" + i + " " +  p.getString("username") + " " + p.getInt("points")+ " pts";
+						if(userName != "" && userName.equals(p.getString("username"))){
 							highlightIndex = i;
-						list.add("#" + ++i + " " +  p.getString("username") + " " + p.getInt("points")+ " pts" );
-
-					}
-					adapter.notifyDataSetChanged();
-					//listView.requestFocusFromTouch(); // IMPORTANT!
-					
-					for(int c = 0; c < listView.getChildCount(); c++) {
-						TextView me = (TextView) listView.getChildAt(c);
-						if(me != null)
-							me.setTextColor((c==highlightIndex) ? Color.YELLOW : Color.WHITE);
-					}
-					adapter.notifyDataSetChanged();
+							Log.d("cloud", "Found " + p.getString("username") + " at index " + Integer.toString(i));
+							entry = "<strong style='font-size:200%'>"+entry + "</strong><br><i style='padding-left:0 8px'>&ensp&ensp&ensp ";
+							entry += getNiceQuote();
+							entry += "</i>";
+						}
+						list.add(Html.fromHtml(entry));
+					}			
+				
+					adapter.notifyDataSetChanged();  //signal the graphics to update
+					Log.d("cloud", "Leaderboard updated!"); 
 				}
 				
+			}  else {
+				Log.d("cloud", "Leaderboard unable to refresh due to adapter or list not loaded");
 			}
+		} else {
+			Log.d("cloud", "Leaderboard unable to refresh due to activity not loaded");
 		}
 	}
 }
