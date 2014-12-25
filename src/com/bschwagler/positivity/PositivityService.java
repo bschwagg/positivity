@@ -13,6 +13,18 @@ import android.widget.Toast;
  */
 public class PositivityService extends IntentService {
 
+	public PositivityService()
+	{
+		super("");
+	}
+	/**
+	 * @param name
+	 */
+	public PositivityService(String name) {
+		super(name);
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	protected void onHandleIntent(Intent workIntent) {
 		// Gets data from the incoming Intent
@@ -20,9 +32,5 @@ public class PositivityService extends IntentService {
 		Toast.makeText(this.getApplicationContext(), "Service got Intent! " + dataString, Toast.LENGTH_SHORT).show();
 	}
 
-	public PositivityService(String name) {
-		super(name);
-		// TODO Auto-generated constructor stub
-	}
 
 }
