@@ -20,13 +20,13 @@ import android.widget.Toast;
 /**
  * @author Brad    Date: Dec 19, 2014
  *
- * Class PositivityBroadcastReceiver.java Description: 
+ * Class BroadcastEventsReceiver.java Description: 
  *
  * Handles any system event messages that need to be received, such as user logs in,
  * locks device, location via wifi, etc. This class is a dispatch for other services/activities to run.
  *  
  */
-public class PositivityBroadcastReceiver extends BroadcastReceiver {
+public class BroadcastEventsReceiver extends BroadcastReceiver {
 
 	/* (non-Javadoc)
 	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
@@ -39,12 +39,15 @@ public class PositivityBroadcastReceiver extends BroadcastReceiver {
 			final SharedPreferences settings = context.getSharedPreferences("UserData", 0);
 			int wakeAlarmDay = settings.getInt("wakeAlarmDay", -1);
 			int currDayNum = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-			if(Globals.getInstance().firstWakeAlarm && wakeAlarmDay != currDayNum){
-				
-				final String name = settings.getString("username", "");
-				Toast.makeText(context, "Good morning " + name, Toast.LENGTH_SHORT).show(); //TEST
-				//We have a new day.. lets fire an alarm!
-				fireOffAlarm(context, 0, null);
+			//Make sure it's a new day and past 4am
+			if(Globals.getInstance().firstWakeAlarm && wakeAlarmDay != currDayNum && Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 4){
+				//If it's still the morning then shoot off the alarm
+				if(Calendar.getInstance().get(Calendar.HOUR_OF_DAY) < 12) {
+					final String name = settings.getString("username", "");
+					Toast.makeText(context, "Good morning " + name, Toast.LENGTH_SHORT).show(); //TEST
+					//We have a new day.. lets fire an alarm!
+					fireOffAlarm(context, 0, null);
+				}
 				//Remember we already did the alarm for today
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putInt("wakeAlarmDay", currDayNum);
