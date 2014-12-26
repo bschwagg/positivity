@@ -119,7 +119,7 @@
             android:onClick="myButtonClickHandler"
             android:text="Test Message"
             android:textSize="18sp"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <CheckBox
             android:id="@+id/setting_countdown"

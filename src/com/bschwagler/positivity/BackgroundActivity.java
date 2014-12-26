@@ -7,19 +7,33 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.Vector;
 
+import com.parse.ParseObject;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author Brad    Date: Dec 19, 2014
@@ -34,23 +48,133 @@ public class BackgroundActivity extends Activity {
 
 	//Stuff for Phrase Dialog
 	Vector<String> phrases = null;
-	PhraseDialog phraseDialog = null;
+	String currPhrase = null;
 	boolean enableVib;
+	private int mProgressStatus = 0;
+	private boolean startedCountdown = false;
+	private boolean isShowing = false;
+	CountDownTimer mCountDownTimer;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_background);
+		final TextView count = (TextView) findViewById(R.id.text_count);
+		final ProgressBar progBar = (ProgressBar) findViewById(R.id.pbHeaderProgress);
+		TextView dismissText = (TextView) findViewById(R.id.text_instructions);
+		ImageView iv = (ImageView) findViewById(R.id.phrase_pic);
+		
 		setupPhrases();
+		
+		//first time loading or view not yet dismissed
+		if(currPhrase == null || isShowing == false)
+			currPhrase = phrases.get((int) (Math.random() * phrases.size())) ;
+
+		
+		//Set up the view since count down hasn't started
+		if( startedCountdown == false )
+		{
+			progBar.setVisibility(ProgressBar.INVISIBLE);
+			count.setVisibility(TextView.INVISIBLE);
+			dismissText.setText( Globals.getInstance().useCountdown ? 
+					"(Tap screen to start countdown timer)" : "(Tap screen to dismiss)");
+			TextView textView = (TextView) findViewById(R.id.phrase_msg);
+			if(textView != null)
+				textView.setText(currPhrase);
+			isShowing = true;
+		}
+		
+		//Set up clicking on the image..
+		iv.setOnClickListener(new View.OnClickListener() {
+
+			//Screen is clicked...
+		    public void onClick(View v) {
+		    	//Ignore the listener once clicked to start.. (they can always use home/back keys to exit)
+		    	if(startedCountdown)
+		    		return;
+		    	
+		    	//Kick off the timer if needed...
+		    	if( !Globals.getInstance().useCountdown ){
+		    		dialogFinishOK();
+		    		return;
+		    	}
+		    	
+		    	
+		    	startedCountdown = true;
+		    	progBar.setVisibility(ProgressBar.VISIBLE);
+				count.setVisibility(TextView.VISIBLE);
+				mProgressStatus = 20; //start at 20 seconds
+				// Start lengthy operation in a background thread
+				mCountDownTimer=new CountDownTimer(20000,1000) {
+
+					@Override
+					public void onTick(long millisUntilFinished) {
+						Log.v("Log_tag", "Tick of Progress"+ mProgressStatus+ millisUntilFinished);
+						mProgressStatus--;
+						progBar.setProgress(mProgressStatus);
+						String progressStr = "" + mProgressStatus;
+						if(mProgressStatus <= 1){
+							progressStr = "&#9786"; //smiley face
+							count.setText(Html.fromHtml(progressStr));
+						} else {
+							count.setText(progressStr);
+						}
+					}
+
+					@Override
+					public void onFinish() {
+						//Short shake to know the countdown is done..
+						if(Globals.getInstance().vibEnabled) {
+							Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+							if(vibrator != null)
+								vibrator.vibrate(100); 
+						}
+						dialogFinishOK();
+					}
+				};
+				mCountDownTimer.start();
+
+			}
+		});
 
 	}
-
-	@Override
-	protected void onDestroy()
+	
+	private void dialogFinishOK()
 	{
-		super.onDestroy();
+	
+		NotificationManager nMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+		//nMgr.cancel(notifID);
+		nMgr.cancelAll(); //TODO: temporary until I figure out why new Dialog isn't being created every .show()
+
+		if( isShowing) {
+			// Add a point to our score!
+			SharedPreferences settings =getSharedPreferences("UserData", 0);
+			int points = settings.getInt("points", 0);
+			SharedPreferences.Editor editor = settings.edit();
+			points++;
+			editor.putInt("points", points );
+			editor.commit();
+
+			ParseObject pObj = ((MainApplication)getApplication()).myParseObject;
+
+			if( pObj != null){
+				Log.d("cloud", "Saving score " + points + " for " + pObj.getString("username") + " to the cloud!");
+				pObj.put("points", points);
+				pObj.put("countdown", Globals.getInstance().useCountdown);
+				pObj.saveInBackground();
+			}
+
+			Toast.makeText(this, "Nice! You earned +1 points", Toast.LENGTH_SHORT).show();
+		}
+		startedCountdown = false;
+		isShowing = false;
+		currPhrase = null;
+		currPhrase = null;
+		
+		this.finish(); //kill off the activity
 	}
+
 
 	private void setupPhrases()
 	{
@@ -69,8 +193,6 @@ public class BackgroundActivity extends Activity {
 				e.printStackTrace();
 			}
 		}
-		if(phraseDialog == null)
-			phraseDialog = new PhraseDialog();
 	}
 
 	@Override
@@ -95,36 +217,7 @@ public class BackgroundActivity extends Activity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		if(phraseDialog != null)
-			phraseDialog.dismiss(); //make sure we cleanly close this dialog when the activity loses focus
+
 	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		//code moved to onPostResume() due to bug!
-		//Issue: https://code.google.com/p/android/issues/detail?id=23761
-		//See: http://stackoverflow.com/questions/16265733/failure-delivering-result-onactivityforresult/18345899#18345899
-		//Problem launching dialog from a broadcast receiver?
-		//http://stackoverflow.com/questions/4844031/alertdialog-from-within-broadcastreceiver-can-it-be-done
-		if(phraseDialog != null || !phraseDialog.isShowing()) {
-
-			//Grab an ID handle to the notification
-			//this can be used by our dialog to dismiss it from the tool bar
-			int id = -1;
-			Bundle extras = getIntent().getExtras();
-			if(extras != null){
-				id = extras.getInt("notificationId");
-			}
-			phraseDialog.setNotifID(id);
-			String phrase = phrases.get((int) (Math.random() * phrases.size())) ;
-			phraseDialog.setPhrase(  phrase );
-			phraseDialog.show(getFragmentManager(), phrase);
-
-			//Toast.makeText(c,), Toast.LENGTH_LONG).show();
-		}
-	}
-
-
 
 }

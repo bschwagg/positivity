@@ -57,10 +57,8 @@
             android:excludeFromRecents="true"
             android:label="@string/title_activity_background"
             android:launchMode="singleTask"
-            android:noHistory="true"
             android:screenOrientation="portrait"
-            android:taskAffinity=""
-            android:theme="@android:style/Theme.NoDisplay" >
+           android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
 
         </activity>
 
