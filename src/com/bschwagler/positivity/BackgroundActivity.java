@@ -18,6 +18,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
@@ -106,20 +107,25 @@ public class BackgroundActivity extends Activity {
 				count.setVisibility(TextView.VISIBLE);
 				mProgressStatus = 20; //start at 20 seconds
 				// Start lengthy operation in a background thread
-				mCountDownTimer=new CountDownTimer(20000,1000) {
+				mCountDownTimer=new CountDownTimer(20000,100) {
 
 					@Override
 					public void onTick(long millisUntilFinished) {
-						Log.v("Log_tag", "Tick of Progress"+ mProgressStatus+ millisUntilFinished);
-						mProgressStatus--;
+						//Log.v("Log_tag", "Tick of Progress"+ mProgressStatus+ millisUntilFinished);
+						float alpha;
+						mProgressStatus = Math.round( millisUntilFinished/1000.0f ) ;
 						progBar.setProgress(mProgressStatus);
 						String progressStr = "" + mProgressStatus;
 						if(mProgressStatus <= 1){
 							progressStr = "&#9786"; //smiley face
 							count.setText(Html.fromHtml(progressStr));
+							alpha = 255.0f;
 						} else {
+							alpha = 255.0f - ((float) mProgressStatus - ((float)millisUntilFinished/1000.0f) + 0.5f) * 255.0f;
 							count.setText(progressStr);
 						}
+						count.setTextColor(Color.argb((int) alpha, 0, 0, 255));
+						//Log.d("msg", "Alpha: " + alpha);
 					}
 
 					@Override
