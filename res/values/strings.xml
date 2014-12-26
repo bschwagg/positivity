@@ -3,6 +3,6 @@
 
     <string name="app_name">positivity</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_background">BackgroundActivity</string>
+    <string name="title_activity_background">Positivity Message</string>
 
 </resources>
