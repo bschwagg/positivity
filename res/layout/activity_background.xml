@@ -37,15 +37,17 @@
 
     <TextView
         android:id="@+id/phrase_msg"
-        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="291dp"
         android:layout_column="0"
         android:layout_gravity="center"
         android:layout_row="0"
+        android:gravity="center_horizontal"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="hello"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="30sp" />
+        android:textSize="28sp" />
 
     <ProgressBar
         android:id="@+id/pbHeaderProgress"
