@@ -28,6 +28,7 @@ import android.widget.Toast;
  */
 public class BroadcastEventsReceiver extends BroadcastReceiver {
 
+	final int ONE_SHOT_ALARM_ID = 100; //constant alarm ID
 	/* (non-Javadoc)
 	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
 	 */
@@ -81,15 +82,16 @@ public class BroadcastEventsReceiver extends BroadcastReceiver {
 		if(toastMsg!=null)
 			extras.putString("toastMsg", toastMsg);
 		broadcast_intent.putExtras(extras);
-		PendingIntent pi = PendingIntent.getBroadcast( c, 100, broadcast_intent, 0 );
+		PendingIntent pi = PendingIntent.getBroadcast( c, ONE_SHOT_ALARM_ID, broadcast_intent, 0 );
 		AlarmManager am = (AlarmManager)(c.getSystemService( Context.ALARM_SERVICE ));
-		am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + seconds*60*1000 /*ms*/, pi );
+		am.cancel(pi); //cancel old one if it still exists
+		am.set( AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + seconds*60*1000 /*ms*/, pi );
 	}
 	
 	private void cancelAlarm(Context c)
 	{
 		Intent broadcast_intent = new Intent(c /*MainActivity.this*/, AlarmReceiver.class);
-		PendingIntent pi = PendingIntent.getBroadcast( c, 100, broadcast_intent, 0 );
+		PendingIntent pi = PendingIntent.getBroadcast( c, ONE_SHOT_ALARM_ID, broadcast_intent, 0 );
 		AlarmManager am = (AlarmManager)(c.getSystemService( Context.ALARM_SERVICE ));
 		am.cancel(pi);
 	
