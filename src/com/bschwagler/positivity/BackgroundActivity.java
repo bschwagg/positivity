@@ -66,6 +66,7 @@ public class BackgroundActivity extends Activity {
 		TextView dismissText = (TextView) findViewById(R.id.text_instructions);
 		ImageView iv = (ImageView) findViewById(R.id.phrase_pic);
 		
+		
 		setupPhrases();
 		
 		//first time loading or view not yet dismissed
@@ -95,6 +96,12 @@ public class BackgroundActivity extends Activity {
 		    	if(startedCountdown)
 		    		return;
 		    	
+		    	//Always remove the notification
+		    	NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				//nMgr.cancel(notifID);
+				nMgr.cancelAll(); //TODO: temporary until I figure out why new Dialog isn't being created every .show()
+
+			
 		    	//Kick off the timer if needed...
 		    	if( !Globals.getInstance().useCountdown ){
 		    		dialogFinishOK();
@@ -149,10 +156,7 @@ public class BackgroundActivity extends Activity {
 	private void dialogFinishOK()
 	{
 	
-		NotificationManager nMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-		//nMgr.cancel(notifID);
-		nMgr.cancelAll(); //TODO: temporary until I figure out why new Dialog isn't being created every .show()
-
+	
 		if( isShowing) {
 			// Add a point to our score!
 			SharedPreferences settings =getSharedPreferences("UserData", 0);
