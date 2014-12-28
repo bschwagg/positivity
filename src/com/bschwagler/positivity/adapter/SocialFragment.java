@@ -20,6 +20,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -46,33 +51,42 @@ public class SocialFragment extends Fragment {
 	Activity act;
 	int highlightIndex = -1;
 
-	
+
 	public static interface OnCompleteListener {
-	    public abstract void onComplete();
+		public abstract void onComplete();
 	}
 
 	private OnCompleteListener mListener;
 
 	public void onAttach(Activity activity) {
-	    super.onAttach(activity);
-	    try {
-	        this.mListener = (OnCompleteListener)activity;
-	    }
-	    catch (final ClassCastException e) {
-	        throw new ClassCastException(activity.toString() + " must implement OnCompleteListener");
-	    }
+		super.onAttach(activity);
+		try {
+			this.mListener = (OnCompleteListener)activity;
+		}
+		catch (final ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement OnCompleteListener");
+		}
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+		act = getActivity();
 		rootView = inflater.inflate(R.layout.social, container, false);
 
 		// Get ListView object from xml
 		listView = (ListView) rootView.findViewById(R.id.list_leaderbaord);
-
-		 
+		Animation fadeIn = new AlphaAnimation(0, 1);
+	    fadeIn.setDuration(1500);
+		TextView t = (TextView)rootView.findViewById(R.id.text_leaderboard);
+		RotateAnimation ranim = (RotateAnimation)AnimationUtils.loadAnimation(act, R.anim.text_rotate);
+		ranim.setFillAfter(true); //For the textview to remain at the same place after the rotation
+		AnimationSet animationSet = new AnimationSet(true);
+		animationSet.addAnimation( ranim );
+		animationSet.addAnimation( fadeIn );
+		t.setAnimation(animationSet);
+		ranim.start();
+		
 		// Define a new Adapter
 		// First parameter - Context
 		// Second parameter - Layout for the row
@@ -86,7 +100,7 @@ public class SocialFragment extends Fragment {
 		// Assign adapter to ListView
 		listView.setAdapter(adapter); 
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		act = getActivity();
+		
 		/*//In case we want to click on the user's score and get more info...
         // ListView Item Click Listener
         listView.setOnItemClickListener(new OnItemClickListener() {
@@ -110,23 +124,23 @@ public class SocialFragment extends Fragment {
 
          }); 
 		 */
-		
+
 		return rootView;
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("social", "About to signal the social frag is loaded");
 		mListener.onComplete();
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-//		listView.smoothScrollToPosition(highlightIndex);
+		//		listView.smoothScrollToPosition(highlightIndex);
 	}
-	
+
 	public String getNiceQuote() {
 		String[] q = {"Nice!","Keep it up!","Good job!","You're on your way!","Looking good!","Keep with it","Keep on going", "Happiness is on the rise","Success is in continuity",
 				"Lah-di-dah","Rock on","Awesome","Keep on climbin' up","Great work","Oh yeah","Very nice","Nice!","booyah"};
@@ -139,10 +153,10 @@ public class SocialFragment extends Fragment {
 		{
 			SharedPreferences settings = act.getSharedPreferences("UserData", 0);
 			String userName = settings.getString("username", "");
-			
-			
+
+
 			if(adapter != null && list != null) {
-				
+
 				List<ParseObject> lb = ((MainApplication)getActivity().getApplication()).leaderBoard;
 				//Not yet loaded?
 				if(lb.size() == 0) {
@@ -171,11 +185,11 @@ public class SocialFragment extends Fragment {
 						}
 						list.add(Html.fromHtml(entry));
 					}			
-				
+
 					adapter.notifyDataSetChanged();  //signal the graphics to update
 					Log.d("cloud", "Leaderboard updated!"); 
 				}
-				
+
 			}  else {
 				Log.d("cloud", "Leaderboard unable to refresh due to adapter or list not loaded");
 			}

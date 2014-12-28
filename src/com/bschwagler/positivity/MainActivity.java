@@ -141,6 +141,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 						updateLeaderBoard();
 					} else {
 						Log.d("cloud", "Error: Unable to download leader board from cloud.  Error:" + e.getMessage());
+						Toast.makeText(activity, "Unable to get player info. No internet?...", Toast.LENGTH_SHORT).show(); //This may be too much info..
 					}
 					querryRunning = false;
 				}

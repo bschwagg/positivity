@@ -63,7 +63,7 @@ public class BackgroundActivity extends Activity {
 		setContentView(R.layout.activity_background);
 		final TextView count = (TextView) findViewById(R.id.text_count);
 		final ProgressBar progBar = (ProgressBar) findViewById(R.id.pbHeaderProgress);
-		TextView dismissText = (TextView) findViewById(R.id.text_instructions);
+		final TextView dismissText = (TextView) findViewById(R.id.text_instructions);
 		ImageView iv = (ImageView) findViewById(R.id.phrase_pic);
 		
 		
@@ -79,6 +79,7 @@ public class BackgroundActivity extends Activity {
 		{
 			progBar.setVisibility(ProgressBar.INVISIBLE);
 			count.setVisibility(TextView.INVISIBLE);
+			dismissText.setVisibility(TextView.VISIBLE);
 			dismissText.setText( Globals.getInstance().useCountdown ? 
 					"(Tap screen to start countdown timer)" : "(Tap screen to dismiss)");
 			TextView textView = (TextView) findViewById(R.id.phrase_msg);
@@ -112,6 +113,7 @@ public class BackgroundActivity extends Activity {
 		    	startedCountdown = true;
 		    	progBar.setVisibility(ProgressBar.VISIBLE);
 				count.setVisibility(TextView.VISIBLE);
+				dismissText.setVisibility(TextView.INVISIBLE);
 				mProgressStatus = 20; //start at 20 seconds
 				// Start lengthy operation in a background thread
 				mCountDownTimer=new CountDownTimer(20000,100) {

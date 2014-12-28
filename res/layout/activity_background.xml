@@ -56,6 +56,7 @@
         android:layout_column="0"
         android:layout_gravity="center_horizontal|top"
         android:layout_row="0"
+        android:alpha="50.0"
         android:max="20"
         android:visibility="visible" />
 
