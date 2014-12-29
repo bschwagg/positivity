@@ -88,7 +88,6 @@ public class SocialFragment extends Fragment {
 		ranim.start();
 		
 		
-		
 		// Define a new Adapter
 		// First parameter - Context
 		// Second parameter - Layout for the row
@@ -149,17 +148,22 @@ public class SocialFragment extends Fragment {
 		return q[ (int)(Math.random() * (double)q.length) ];
 	}
 
+	/**
+	 * Update the leader board adapter.
+	 * Since this is called asynchronously we have to check state of app and activity
+	 * 
+	 */
 	public void update() {
 		// Add a point to our score!
 		if(act != null)
 		{
 			SharedPreferences settings = act.getSharedPreferences("UserData", 0);
 			String userName = settings.getString("username", "");
+			MainApplication app = ((MainApplication)act.getApplication());
 
+			if(app != null && adapter != null && list != null) {
 
-			if(adapter != null && list != null) {
-
-				List<ParseObject> lb = ((MainApplication)getActivity().getApplication()).leaderBoard;
+				List<ParseObject> lb = app.leaderBoard;
 				//Not yet loaded?
 				if(lb.size() == 0) {
 					Log.d("cloud", "Leaderboard can't update yet.. no data..");

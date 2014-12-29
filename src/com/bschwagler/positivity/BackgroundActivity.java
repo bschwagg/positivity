@@ -1,6 +1,8 @@
 package com.bschwagler.positivity;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,10 +20,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.provider.Settings.Global;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -54,6 +60,7 @@ public class BackgroundActivity extends Activity {
 	private int mProgressStatus = 0;
 	private boolean startedCountdown = false;
 	private boolean isShowing = false;
+	String currBgImage = "";
 	CountDownTimer mCountDownTimer;
 
 
@@ -65,15 +72,15 @@ public class BackgroundActivity extends Activity {
 		final ProgressBar progBar = (ProgressBar) findViewById(R.id.pbHeaderProgress);
 		final TextView dismissText = (TextView) findViewById(R.id.text_instructions);
 		ImageView iv = (ImageView) findViewById(R.id.phrase_pic);
-		
-		
+
+		setupBackground();
 		setupPhrases();
-		
+
 		//first time loading or view not yet dismissed
 		if(currPhrase == null || isShowing == false)
 			currPhrase = phrases.get((int) (Math.random() * phrases.size())) ;
 
-		
+
 		//Set up the view since count down hasn't started
 		if( startedCountdown == false )
 		{
@@ -87,31 +94,36 @@ public class BackgroundActivity extends Activity {
 				textView.setText(currPhrase);
 			isShowing = true;
 		}
-		
+
 		//Set up clicking on the image..
 		iv.setOnClickListener(new View.OnClickListener() {
 
 			//Screen is clicked...
-		    public void onClick(View v) {
-		    	//Ignore the listener once clicked to start.. (they can always use home/back keys to exit)
-		    	if(startedCountdown)
-		    		return;
-		    	
-		    	//Always remove the notification
-		    	NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			public void onClick(View v) {
+				//Ignore the listener once clicked to start.. (they can always use home/back keys to exit)
+				if(startedCountdown)
+					return;
+
+				//Always remove the notification
+				NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 				//nMgr.cancel(notifID);
 				nMgr.cancelAll(); //TODO: temporary until I figure out why new Dialog isn't being created every .show()
 
-			
-		    	//Kick off the timer if needed...
-		    	if( !Globals.getInstance().useCountdown ){
-		    		dialogFinishOK();
-		    		return;
-		    	}
-		    	
-		    	
-		    	startedCountdown = true;
-		    	progBar.setVisibility(ProgressBar.VISIBLE);
+
+				//Kick off the timer if needed...
+				if( !Globals.getInstance().useCountdown ){
+					dialogFinishOK();
+					return;
+				}
+
+
+				startedCountdown = true;
+				progBar.setVisibility(ProgressBar.VISIBLE);
+				AlphaAnimation alpha = new AlphaAnimation(0.5F, 0.5F);
+				alpha.setDuration(0); // Make animation instant
+				alpha.setFillAfter(true); // Tell it to persist after the animation ends
+				progBar.startAnimation(alpha);
+				
 				count.setVisibility(TextView.VISIBLE);
 				dismissText.setVisibility(TextView.INVISIBLE);
 				mProgressStatus = 20; //start at 20 seconds
@@ -154,11 +166,30 @@ public class BackgroundActivity extends Activity {
 		});
 
 	}
-	
+
+	/**
+	 * 
+	 */
+	private void setupBackground() {
+
+		if(Globals.getInstance().imgPath != null && ! currBgImage.equals(Globals.getInstance().imgPath)){
+
+			Bitmap myBitmap = BitmapFactory.decodeFile(Globals.getInstance().imgPath);
+			if(myBitmap!=null){
+
+				ImageView myImage = (ImageView) findViewById(R.id.phrase_pic);
+				myImage.setImageBitmap(myBitmap);
+				currBgImage = Globals.getInstance().imgPath; //remember which image is loaded
+
+				Log.d("image", "Loaded file: " + Globals.getInstance().imgPath);
+			}
+		}
+	}
+
 	private void dialogFinishOK()
 	{
-	
-	
+
+
 		if( isShowing) {
 			// Add a point to our score!
 			SharedPreferences settings =getSharedPreferences("UserData", 0);
@@ -183,7 +214,7 @@ public class BackgroundActivity extends Activity {
 		isShowing = false;
 		currPhrase = null;
 		currPhrase = null;
-		
+
 		this.finish(); //kill off the activity
 	}
 

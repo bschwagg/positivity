@@ -1,6 +1,8 @@
 package com.bschwagler.positivity;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import com.bschwagler.positivity.adapter.SocialFragment;
@@ -21,6 +23,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -36,10 +40,12 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
@@ -68,6 +74,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	private ActionBar actionBar;
 	SocialFragment socFrag;
 	private MainActivity activity;
+	String imageFilePath;
 
 	// Tab titles
 	private String[] tabs = { "Welcome", "Settings", "Social" };
@@ -78,7 +85,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		ParseAnalytics.trackAppOpened(getIntent());
-		
+
 		setupTabs();
 		setupAlarmReceiver();
 		promptUserName(this); //all that's stored locally is the user name. 
@@ -343,6 +350,49 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		//am.setRepeating(AlarmManager.RTC_WAKEUP, /*ms*/, AlarmManager.INTERVAL_DAY, pi); //daily alarm
 
 	}
+
+	public void imgButtonHandler(View v)
+	{
+		//		Intent intent = new Intent();
+		//		intent.setType("image/*");
+		//		intent.setAction(Intent.ACTION_GET_CONTENT);
+		Intent intent = new Intent(Intent.ACTION_PICK, 
+				Images.Media.EXTERNAL_CONTENT_URI);
+		startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+	}
+
+	private static final int PICK_IMAGE = 1;
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == PICK_IMAGE ) {
+			if(resultCode == Activity.RESULT_OK){
+				Uri _uri = data.getData();
+
+				//User had pick an image.
+				String[] filePathColumn = {MediaStore.Images.Media.DATA};
+				Cursor cursor = getContentResolver().query(_uri, filePathColumn, null, null, null);
+				if(cursor != null){ //in case the internet is down for example
+					cursor.moveToFirst();
+
+					int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+					String path = cursor.getString(columnIndex);
+					cursor.close();
+
+					//Link to the image
+					Globals.getInstance().imgPath = path;
+					Log.d("Image","Saved image file: "+Globals.getInstance().imgPath );
+				}
+			} 
+			else
+			{
+				Globals.getInstance().imgPath = null;
+				Log.d("Image","Resetting image to default" );
+			}
+		}
+	}
+
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {

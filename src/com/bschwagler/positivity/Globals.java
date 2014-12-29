@@ -60,6 +60,8 @@ public class Globals implements Serializable {
 
 	public ArrayList<Calendar> dailyAlarmList;
 
+	public String imgPath;
+
 	protected Globals(){
 		
 		dailyAlarmList = new ArrayList<Calendar>();

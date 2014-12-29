@@ -94,6 +94,13 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 		Button deleteBtn = (Button)view.findViewById(R.id.delete_btn);
 		Button addBtn = (Button)view.findViewById(R.id.add_btn);
 		Button addRndBtn = (Button)view.findViewById(R.id.add_rnd_btn);
+		
+		//Default view for the hint
+		View hint = (View)((Activity)context).findViewById(R.id.hint_popup);
+		if(Globals.getInstance().dailyAlarmList.size() < 2 )
+			hint.setVisibility(View.VISIBLE);
+		else
+			hint.setVisibility(View.GONE);
 
 		//Handle TextView and display string from your list
 		TextView listItemText = (TextView)view.findViewById(R.id.list_item_string); 

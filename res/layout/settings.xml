@@ -124,7 +124,7 @@
             android:layout_below="@+id/text_gen_settings"
             android:layout_centerInParent="true"
             android:checked="true"
-            android:text="Vibrate Notification"
+            android:text="Vibrate on Notification"
             android:textSize="18sp" />
 
         <CheckBox
@@ -133,7 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/setting_vibrate"
             android:layout_centerInParent="true"
-            android:text="Audio Notification  "
+            android:text="Audio on Notification  "
             android:textSize="18sp" />
 
         <Button
@@ -170,6 +170,21 @@
             android:layout_marginTop="15dp"
             android:animateLayoutChanges="true" >
         </ListView>
+
+        <Button
+            android:id="@+id/button_sel_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/test_msg_button"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_shadow"
+            android:minHeight="24dp"
+            android:onClick="imgButtonHandler"
+            android:text="Select Custom Image"
+            android:textSize="18sp" />
+
     </RelativeLayout>
 
 </ScrollView>
