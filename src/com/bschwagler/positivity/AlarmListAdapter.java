@@ -114,6 +114,11 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 				PendingIntent pi = PendingIntent.getBroadcast( context /*MainActivity.this*/, (int) t, intent, /*PendingIntent.FLAG_UPDATE_CURRENT)*/	0 );
 				AlarmManager am = (AlarmManager)(context.getSystemService( Context.ALARM_SERVICE ));
 				am.cancel(pi);	
+				
+				//Show the hint if applicable
+				View hint = (View)((Activity)context).findViewById(R.id.hint_popup);
+				if(Globals.getInstance().dailyAlarmList.size() < 2 )
+					hint.setVisibility(View.VISIBLE);
 			}
 		});
 		addBtn.setOnClickListener(new View.OnClickListener(){
@@ -121,6 +126,11 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 			public void onClick(View v) { 
 				final TimePickerFragment newFragment = new TimePickerFragment(ala);	//Create this only once and it will remember the last open settings  
 				newFragment.show( ((Activity)context).getFragmentManager(), "timePicker");   
+				//remove the hint if applicable
+				View hint = (View)((Activity)context).findViewById(R.id.hint_popup);
+				hint.setVisibility(View.GONE);
+			
+					
 
 			}
 		});
@@ -128,6 +138,9 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 			@Override
 			public void onClick(View v) { 
 				setRandomAlarms();
+				//remove the hint if applicable
+				View hint = (View)((Activity)context).findViewById(R.id.hint_popup);
+				hint.setVisibility(View.GONE);
 			}
 		});
 

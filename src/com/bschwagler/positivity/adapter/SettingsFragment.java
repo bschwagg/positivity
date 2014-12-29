@@ -53,6 +53,8 @@ public class SettingsFragment extends Fragment {
 		
 		final View rootView = inflater.inflate(R.layout.settings, container, false);
 
+	
+		
 	    //instantiate custom adapter
 	    adapter = new AlarmListAdapter(getActivity());
 

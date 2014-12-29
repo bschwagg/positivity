@@ -11,6 +11,34 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
+        <LinearLayout
+            android:id="@+id/hint_popup"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_marginBottom="25dp"
+            android:layout_below="@+id/alarm_listview"
+            android:background="@drawable/popup"
+            android:elevation="10dp" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="74dp"
+                android:text="\n     Note:  "
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#FFEB3B" />
+
+            <TextView
+                android:id="@+id/textNote"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="12dp"
+                android:text="Make sure to click 'Add New Time' above, to set some times!"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/text_notif_times"
             android:layout_width="wrap_content"
@@ -19,6 +47,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="false"
             android:layout_centerInParent="true"
+            android:elevation="10dp"
             android:paddingTop="10dp"
             android:text="Notification Times"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -29,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/alarm_listview"
+            android:layout_below="@+id/hint_popup"
             android:text="Set random times"
             android:textSize="18sp"
             android:visibility="gone" />
@@ -83,6 +112,7 @@
             android:layout_below="@+id/alarm_location"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="false"
+            android:elevation="10dp"
             android:paddingTop="10dp"
             android:text="General Settings"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -142,7 +172,6 @@
             android:layout_marginTop="15dp"
             android:animateLayoutChanges="true" >
         </ListView>
-
     </RelativeLayout>
 
 </ScrollView>
