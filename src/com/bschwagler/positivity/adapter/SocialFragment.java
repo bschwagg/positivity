@@ -192,7 +192,7 @@ public class SocialFragment extends Fragment {
 							entry = "<font color='#000000'>" + entry + "</font>";
 						}
 						list.add(Html.fromHtml(entry));
-						Log.d("cloud", entry);
+						//Log.d("cloud", entry); //TEST
 					}			
 
 					adapter.notifyDataSetChanged();  //signal the graphics to update
