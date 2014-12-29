@@ -39,13 +39,13 @@ implements TimePickerDialog.OnTimeSetListener {
 	CheckBox checkBox;
 	AlarmListAdapter aa;
 
-	 /**
+	/**
 	 * 
 	 */
 	public TimePickerFragment(AlarmListAdapter a) {
 		aa = a;
 	}
-	
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -55,7 +55,7 @@ implements TimePickerDialog.OnTimeSetListener {
 		int hour = c.get(Calendar.HOUR_OF_DAY);
 		int minute = c.get(Calendar.MINUTE);
 
-		
+
 
 		// Create a new instance of TimePickerDialog and return it
 		TimePickerDialog tpDialog = new TimePickerDialog(getActivity(), this, hour, minute,
@@ -75,33 +75,35 @@ implements TimePickerDialog.OnTimeSetListener {
 	}
 
 	public void onTimeSet(TimePicker view, int hourOfDaySel, int minuteSel) {
-		// Do something with the time chosen by the user
-		final Calendar now = Calendar.getInstance();
-		
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR_OF_DAY, hourOfDaySel);
-		calendar.set(Calendar.MINUTE, minuteSel);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0); 
-		
-		if(calendar.before(now))
-			calendar.add(Calendar.DAY_OF_YEAR, 1); //Don't trigger if time is earlier in the day!
+		if (view.isShown()) {
+			// Do something with the time chosen by the user
+			final Calendar now = Calendar.getInstance();
 
-		Globals.getInstance().dailyAlarmList.add( calendar );
-		aa.update(); //refresh view
-		
-		//Would like to make a global alarm manager class. However can't access main Activity. How? TODO
-			
-		//Create an alarm which will fire off our AlarmReceiver..
-		Intent intent = new Intent(getActivity() /*MainActivity.this*/, AlarmReceiver.class);
-		//				Bundle extras = new Bundle();
-		//				extras.putString("immediate", "true"); //pass a flag that we want to pop up the dialog right away. No notification manager.
-		//				intent.putExtras(extras);
-		//extras.putString("toastMsg", toastMsg);
-		//store ID by calendar time in milliseconds
-		PendingIntent pi = PendingIntent.getBroadcast( getActivity() /*MainActivity.this*/, (int) calendar.getTimeInMillis(), intent, /*PendingIntent.FLAG_UPDATE_CURRENT)*/	0 );
-		AlarmManager am = (AlarmManager)(getActivity().getSystemService( Context.ALARM_SERVICE ));
-		//am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()/*ms*/, pi ); //single shot alarm
-		am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()/*ms*/, AlarmManager.INTERVAL_DAY, pi); //daily alarm	
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.HOUR_OF_DAY, hourOfDaySel);
+			calendar.set(Calendar.MINUTE, minuteSel);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MILLISECOND, 0); 
+
+			if(calendar.before(now))
+				calendar.add(Calendar.DAY_OF_YEAR, 1); //Don't trigger if time is earlier in the day!
+
+			Globals.getInstance().dailyAlarmList.add( calendar );
+			aa.update(); //refresh view
+
+			//Would like to make a global alarm manager class. However can't access main Activity. How? TODO
+
+			//Create an alarm which will fire off our AlarmReceiver..
+			Intent intent = new Intent(getActivity() /*MainActivity.this*/, AlarmReceiver.class);
+			//				Bundle extras = new Bundle();
+			//				extras.putString("immediate", "true"); //pass a flag that we want to pop up the dialog right away. No notification manager.
+			//				intent.putExtras(extras);
+			//extras.putString("toastMsg", toastMsg);
+			//store ID by calendar time in milliseconds
+			PendingIntent pi = PendingIntent.getBroadcast( getActivity() /*MainActivity.this*/, (int) calendar.getTimeInMillis(), intent, /*PendingIntent.FLAG_UPDATE_CURRENT)*/	0 );
+			AlarmManager am = (AlarmManager)(getActivity().getSystemService( Context.ALARM_SERVICE ));
+			//am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()/*ms*/, pi ); //single shot alarm
+			am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()/*ms*/, AlarmManager.INTERVAL_DAY, pi); //daily alarm	
+		}
 	}
 }

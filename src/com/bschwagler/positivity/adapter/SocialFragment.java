@@ -87,6 +87,8 @@ public class SocialFragment extends Fragment {
 		t.setAnimation(animationSet);
 		ranim.start();
 		
+		
+		
 		// Define a new Adapter
 		// First parameter - Context
 		// Second parameter - Layout for the row
@@ -183,7 +185,14 @@ public class SocialFragment extends Fragment {
 								entry += getNiceQuote();
 							entry += "</i>";
 						}
+						
+						//For older android OS set color to white
+						int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+						if (currentapiVersion < android.os.Build.VERSION_CODES.LOLLIPOP){
+							entry = "<font color='#000000'>" + entry + "</font>";
+						}
 						list.add(Html.fromHtml(entry));
+						Log.d("cloud", entry);
 					}			
 
 					adapter.notifyDataSetChanged();  //signal the graphics to update

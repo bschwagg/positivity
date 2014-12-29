@@ -3,7 +3,7 @@
 
     <style name="AppTheme" parent="android:Theme.Material.Light">
         <item name="android:textColorPrimary">#123673</item>
-        <item name="android:colorPrimary">#56A2E3</item> 3e89c9
+        <item name="android:colorPrimary">#56A2E3</item>
         <!-- darker variant for the status bar and contextual app bars -->
         <item name="android:colorPrimaryDark">#2068e6</item>
         <!-- theme UI controls like checkboxes and text fields -->

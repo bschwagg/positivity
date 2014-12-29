@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:background="@android:color/white"
-    android:theme="@android:color/white" >
+    android:layout_height="fill_parent" >
 
     <RelativeLayout
         android:id="@+id/settings_layout"
@@ -14,7 +12,7 @@
         <LinearLayout
             android:id="@+id/hint_popup"
             android:layout_width="wrap_content"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="25dp"
             android:layout_below="@+id/alarm_listview"
             android:background="@drawable/popup"
@@ -23,7 +21,7 @@
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
-                android:layout_height="74dp"
+                android:layout_height="wrap_content"
                 android:text="\n     Note:  "
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#FFEB3B" />

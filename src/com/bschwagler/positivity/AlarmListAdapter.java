@@ -48,11 +48,22 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 
 	private AlarmListAdapter ala;
 
-	private int itemHeight = 110;
+	private int itemHeight;
+	private int margin;
 
 	public AlarmListAdapter( Context context) { 
 		this.context = context; 
 		ala = this;
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
+		    // Do something for above versions
+			margin = 180;
+			itemHeight = 110;
+		} else{
+		    // do something for phones running an SDK before
+			margin = 60;
+			itemHeight = 35;
+		}
 	} 
 
 	@Override
@@ -129,9 +140,7 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 				//remove the hint if applicable
 				View hint = (View)((Activity)context).findViewById(R.id.hint_popup);
 				hint.setVisibility(View.GONE);
-			
-					
-
+				hint.invalidate(); //redraw for droid 4.4
 			}
 		});
 		addRndBtn.setOnClickListener(new View.OnClickListener(){
@@ -141,6 +150,7 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 				//remove the hint if applicable
 				View hint = (View)((Activity)context).findViewById(R.id.hint_popup);
 				hint.setVisibility(View.GONE);
+				hint.invalidate();
 			}
 		});
 
@@ -152,7 +162,7 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 		ListView lView = (ListView)((Activity)context).findViewById(R.id.alarm_listview);
 		if(lView != null){
 			RelativeLayout.LayoutParams rlo = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, (Globals.getInstance().dailyAlarmList.size()+1)*itemHeight);
-			rlo.topMargin = 180;
+			rlo.topMargin = margin;
 			lView.setLayoutParams(rlo);
 		}
 		notifyDataSetChanged();

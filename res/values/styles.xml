@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" >
-       
-        <item name="android:background">@android:color/white</item>
-    
+    <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
+        <item name="android:textColorPrimary">#123673</item>
+        <!-- 
+        <item name="android:background">#FFFFFF</item>
+        -->
     </style>
 
 </resources>
