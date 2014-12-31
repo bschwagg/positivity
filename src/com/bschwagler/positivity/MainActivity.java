@@ -169,7 +169,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		score.put("countdown",  Globals.getInstance().useCountdown ); 
 		score.saveInBackground();
 		Log.d("cloud","Storing user entry ");
-		
+
 		//Create a special channel to send each person a message!
 		ParsePush.subscribeInBackground(name, new SaveCallback() {
 			@Override
@@ -382,20 +382,20 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		//		intent.setType("image/*");
 		//		intent.setAction(Intent.ACTION_GET_CONTENT);
 		//		startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-		
+
 		//From the SD Card
 		//		Intent intent = new Intent(Intent.ACTION_PICK, 
 		//				Images.Media.EXTERNAL_CONTENT_URI);
 		//		startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-		
-		
-		//From gallery
-		 Intent intent = new Intent();
-	        intent.setType("image/*");
-	        intent.setAction(Intent.ACTION_GET_CONTENT);
-	        intent.addCategory(Intent.CATEGORY_OPENABLE);
-	        startActivityForResult(intent, PICK_IMAGE);
-	        
+
+
+		//From internal memory only
+		Intent intent = new Intent(Intent.ACTION_PICK, Images.Media.INTERNAL_CONTENT_URI);
+		intent.setType("image/*");
+		//intent.setAction(Intent.ACTION_GET_CONTENT);
+		//intent.addCategory(Intent.CATEGORY_OPENABLE);
+		startActivityForResult(Intent.createChooser(intent,"Select Picture"), PICK_IMAGE);
+
 		//From the Camera
 		//		    File file = new File(path);
 		//		    Uri outputFileUri = Uri.fromFile(file);
@@ -411,25 +411,29 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if(requestCode == PICK_IMAGE ) {
-			  if (resultCode == Activity.RESULT_OK) {
-		            try {
-		                // We need to recyle unused bitmaps
-		                if (BackgroundActivity.bgImage != null) {
-		                	BackgroundActivity.bgImage.recycle();
-		                }
-		                InputStream stream = getContentResolver().openInputStream(
-		                        data.getData());
-		                BackgroundActivity.bgImage = BitmapFactory.decodeStream(stream);
-		                stream.close();
-		            } catch (FileNotFoundException e) {
-		                e.printStackTrace();
-		            } catch (IOException e) {
-		                e.printStackTrace();
-		            }
-			  } else {
-				  Log.d("image", "Cancelled image selection. Defaulting back to stock one.");
-				  BackgroundActivity.bgImage = null;
-			  }
+			if (resultCode == Activity.RESULT_OK) {
+				try {
+					// We need to recyle unused bitmaps
+					if (BackgroundActivity.bgImage != null) {
+						BackgroundActivity.bgImage.recycle();
+					}
+					InputStream stream = getContentResolver().openInputStream(
+							data.getData());
+					BackgroundActivity.bgImage = BitmapFactory.decodeStream(stream);
+					stream.close();
+				} catch (FileNotFoundException e) {
+					Log.d("image","File not found!");
+					BackgroundActivity.bgImage = null;
+					e.printStackTrace();
+				} catch (IOException e) {
+					Log.d("image","File I/O error!");
+					BackgroundActivity.bgImage = null;
+					e.printStackTrace();
+				}
+			} else {
+				Log.d("image", "Cancelled image selection. Defaulting back to stock one.");
+				BackgroundActivity.bgImage = null;
+			}
 		}
 	}
 
