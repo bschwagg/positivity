@@ -21,10 +21,13 @@ import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -54,16 +57,6 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 	public AlarmListAdapter( Context context) { 
 		this.context = context; 
 		ala = this;
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
-		    // Do something for above versions
-			margin = 180;
-			itemHeight = 110;
-		} else{
-		    // do something for phones running an SDK before
-			margin = 60;
-			itemHeight = 35;
-		}
 	} 
 
 	@Override
@@ -94,7 +87,7 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 		Button deleteBtn = (Button)view.findViewById(R.id.delete_btn);
 		Button addBtn = (Button)view.findViewById(R.id.add_btn);
 		Button addRndBtn = (Button)view.findViewById(R.id.add_rnd_btn);
-		
+
 		//Default view for the hint
 		View hint = (View)((Activity)context).findViewById(R.id.hint_popup);
 		if(Globals.getInstance().dailyAlarmList.size() < 2 )
@@ -132,7 +125,7 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 				PendingIntent pi = PendingIntent.getBroadcast( context /*MainActivity.this*/, (int) t, intent, /*PendingIntent.FLAG_UPDATE_CURRENT)*/	0 );
 				AlarmManager am = (AlarmManager)(context.getSystemService( Context.ALARM_SERVICE ));
 				am.cancel(pi);	
-				
+
 				//Show the hint if applicable
 				View hint = (View)((Activity)context).findViewById(R.id.hint_popup);
 				if(Globals.getInstance().dailyAlarmList.size() < 2 )
@@ -166,6 +159,30 @@ public class AlarmListAdapter extends BaseAdapter implements ListAdapter {
 
 	public void update()
 	{
+		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		Display display = wm.getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int width = size.x;
+		int height = size.y;
+
+		float marginFactor = 9.2f;
+		// Nexus5 with 1776 height
+		// margin = 180; for 1776 height  factor=9.8
+		// itemHeight = 110; for 1776 height factor=16.2
+
+		//nexus 4 1184 height
+		//same factors as above works fine
+
+		// Crappy phone with 284px height
+		// margin = 60; for 284  factor 4.7
+		// itemHeight = 35; for 284 factor 8.1
+		if(height < 400) //margin is bigger on smaller displays due to menu headings
+			marginFactor = 5.0f;
+
+		itemHeight = (int)((float)height/15.5f);
+		margin = (int)((float)height/marginFactor);
+
 		ListView lView = (ListView)((Activity)context).findViewById(R.id.alarm_listview);
 		if(lView != null){
 			RelativeLayout.LayoutParams rlo = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, (Globals.getInstance().dailyAlarmList.size()+1)*itemHeight);
