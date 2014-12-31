@@ -62,7 +62,8 @@ public class MainApplication extends Application {
 			}
 		});
 		
-		PushService.setDefaultPushCallback(this,  BackgroundActivity.class);
+		PushService.setDefaultPushCallback(this,  MainActivity.class);
+		//ParseInstallation.getCurrentInstallation().saveInBackground();  
 		
 		ParseACL defaultACL = new ParseACL();
 		// If you would like all objects to be private by default, remove this line.

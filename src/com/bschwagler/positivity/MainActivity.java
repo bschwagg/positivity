@@ -15,8 +15,10 @@ import com.parse.ParseACL;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -116,8 +118,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	@SuppressWarnings("deprecation")
 	private void updateCloudLeaderBoard() {
 
-		ParseAnalytics.trackAppOpened(getIntent());
-
 		//Get the user's data here
 		final SharedPreferences settings = this.getSharedPreferences("UserData", 0);
 		final String name = settings.getString("username", "");
@@ -169,6 +169,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		score.put("countdown",  Globals.getInstance().useCountdown ); 
 		score.saveInBackground();
 		Log.d("cloud","Storing user entry ");
+		
+		//Create a special channel to send each person a message!
+		ParsePush.subscribeInBackground(name, new SaveCallback() {
+			@Override
+			public void done(ParseException e) {
+				if (e == null) {
+					Log.d("com.parse.push", "successfully subscribed to the broadcast channel.");
+				} else {
+					Log.e("com.parse.push", "failed to subscribe for push", e);
+				}
+			}
+		});
 
 	}
 	private void promptUserName(final Activity act) {
@@ -225,6 +237,17 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			.show();
 		} else {
 			viewPager.setCurrentItem( 2 ); //Jump to the social leaderboard if we've already registered
+			//Create a special channel to send each person a message!
+			ParsePush.subscribeInBackground(name, new SaveCallback() {
+				@Override
+				public void done(ParseException e) {
+					if (e == null) {
+						Log.d("com.parse.push", "successfully subscribed to the broadcast channel.");
+					} else {
+						Log.e("com.parse.push", "failed to subscribe for push", e);
+					}
+				}
+			});
 		}
 
 	}
@@ -404,7 +427,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		                e.printStackTrace();
 		            }
 			  } else {
-				  Log.d("image", "Cancelled image selection. Defaulting back to stock one.")
+				  Log.d("image", "Cancelled image selection. Defaulting back to stock one.");
 				  BackgroundActivity.bgImage = null;
 			  }
 		}
