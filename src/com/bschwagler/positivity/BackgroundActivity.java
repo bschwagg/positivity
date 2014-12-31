@@ -81,7 +81,13 @@ public class BackgroundActivity extends Activity {
 		//first time loading or view not yet dismissed
 		if(currPhrase == null || isShowing == false)
 			currPhrase = phrases.get((int) (Math.random() * phrases.size())) ;
-
+		
+		//force a message?
+		if(Globals.getInstance().forcedMessage != null){
+			Log.d("bb activity", "setting message");
+			currPhrase = Globals.getInstance().forcedMessage;
+			Globals.getInstance().forcedMessage = null; //reset
+		}
 
 		//Set up the view since count down hasn't started
 		if( startedCountdown == false )

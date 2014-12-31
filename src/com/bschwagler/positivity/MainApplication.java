@@ -62,7 +62,7 @@ public class MainApplication extends Application {
 			}
 		});
 		
-		PushService.setDefaultPushCallback(this,  MainActivity.class);
+		//PushService.setDefaultPushCallback(this,  BackgroundActivity.class);
 		//ParseInstallation.getCurrentInstallation().saveInBackground();  
 		
 		ParseACL defaultACL = new ParseACL();

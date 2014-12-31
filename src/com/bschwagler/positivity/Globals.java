@@ -61,6 +61,7 @@ public class Globals implements Serializable {
 	public ArrayList<Calendar> dailyAlarmList;
 
 	public String imgPath;
+	public String forcedMessage  = null;
 
 	protected Globals(){
 		
