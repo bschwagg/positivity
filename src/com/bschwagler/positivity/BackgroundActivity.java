@@ -62,6 +62,7 @@ public class BackgroundActivity extends Activity {
 	private boolean isShowing = false;
 	String currBgImage = "";
 	CountDownTimer mCountDownTimer;
+	static Bitmap bgImage = null;
 
 
 	@Override
@@ -171,18 +172,23 @@ public class BackgroundActivity extends Activity {
 	 */
 	private void setupBackground() {
 
-		if(Globals.getInstance().imgPath != null && ! currBgImage.equals(Globals.getInstance().imgPath)){
-
-			Bitmap myBitmap = BitmapFactory.decodeFile(Globals.getInstance().imgPath);
-			if(myBitmap!=null){
-
-				ImageView myImage = (ImageView) findViewById(R.id.phrase_pic);
-				myImage.setImageBitmap(myBitmap);
-				currBgImage = Globals.getInstance().imgPath; //remember which image is loaded
-
-				Log.d("image", "Loaded file: " + Globals.getInstance().imgPath);
-			}
+		if( bgImage != null) {
+			ImageView myImage = (ImageView) findViewById(R.id.phrase_pic);
+			myImage.setImageBitmap(bgImage);
+		
 		}
+//		if(Globals.getInstance().imgPath != null && ! currBgImage.equals(Globals.getInstance().imgPath)){
+//
+//			Bitmap myBitmap = BitmapFactory.decodeFile(Globals.getInstance().imgPath);
+//			if(myBitmap!=null){
+//
+//				ImageView myImage = (ImageView) findViewById(R.id.phrase_pic);
+//				myImage.setImageBitmap(myBitmap);
+//				currBgImage = Globals.getInstance().imgPath; //remember which image is loaded
+//
+//				Log.d("image", "Loaded file: " + Globals.getInstance().imgPath);
+//			}
+//		}
 	}
 
 	private void dialogFinishOK()

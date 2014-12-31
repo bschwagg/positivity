@@ -1,5 +1,6 @@
 package com.bschwagler.positivity;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -353,12 +354,32 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	public void imgButtonHandler(View v)
 	{
+		//From a gallery
 		//		Intent intent = new Intent();
 		//		intent.setType("image/*");
 		//		intent.setAction(Intent.ACTION_GET_CONTENT);
-		Intent intent = new Intent(Intent.ACTION_PICK, 
-				Images.Media.EXTERNAL_CONTENT_URI);
-		startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+		//		startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+		
+		//From the SD Card
+		//		Intent intent = new Intent(Intent.ACTION_PICK, 
+		//				Images.Media.EXTERNAL_CONTENT_URI);
+		//		startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+		
+		
+		//From gallery
+		 Intent intent = new Intent();
+	        intent.setType("image/*");
+	        intent.setAction(Intent.ACTION_GET_CONTENT);
+	        intent.addCategory(Intent.CATEGORY_OPENABLE);
+	        startActivityForResult(intent, PICK_IMAGE);
+	        
+		//From the Camera
+		//		    File file = new File(path);
+		//		    Uri outputFileUri = Uri.fromFile(file);
+		//		    Intent intent = new Intent(
+		//		            android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		//		    intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+		//		    startActivityForResult(intent, PICK_IMAGE);
 	}
 
 	private static final int PICK_IMAGE = 1;
@@ -367,29 +388,25 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if(requestCode == PICK_IMAGE ) {
-			if(resultCode == Activity.RESULT_OK){
-				Uri _uri = data.getData();
-
-				//User had pick an image.
-				String[] filePathColumn = {MediaStore.Images.Media.DATA};
-				Cursor cursor = getContentResolver().query(_uri, filePathColumn, null, null, null);
-				if(cursor != null){ //in case the internet is down for example
-					cursor.moveToFirst();
-
-					int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-					String path = cursor.getString(columnIndex);
-					cursor.close();
-
-					//Link to the image
-					Globals.getInstance().imgPath = path;
-					Log.d("Image","Saved image file: "+Globals.getInstance().imgPath );
-				}
-			} 
-			else
-			{
-				Globals.getInstance().imgPath = null;
-				Log.d("Image","Resetting image to default" );
-			}
+			  if (resultCode == Activity.RESULT_OK) {
+		            try {
+		                // We need to recyle unused bitmaps
+		                if (BackgroundActivity.bgImage != null) {
+		                	BackgroundActivity.bgImage.recycle();
+		                }
+		                InputStream stream = getContentResolver().openInputStream(
+		                        data.getData());
+		                BackgroundActivity.bgImage = BitmapFactory.decodeStream(stream);
+		                stream.close();
+		            } catch (FileNotFoundException e) {
+		                e.printStackTrace();
+		            } catch (IOException e) {
+		                e.printStackTrace();
+		            }
+			  } else {
+				  Log.d("image", "Cancelled image selection. Defaulting back to stock one.")
+				  BackgroundActivity.bgImage = null;
+			  }
 		}
 	}
 
