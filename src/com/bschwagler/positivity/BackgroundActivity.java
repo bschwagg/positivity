@@ -72,6 +72,7 @@ public class BackgroundActivity extends Activity {
 		final ProgressBar progBar = (ProgressBar) findViewById(R.id.pbHeaderProgress);
 		final TextView dismissText = (TextView) findViewById(R.id.text_instructions);
 		ImageView iv = (ImageView) findViewById(R.id.phrase_pic);
+		final ImageView smiley = (ImageView) findViewById(R.id.imageSmiley);
 
 		setupBackground();
 		setupPhrases();
@@ -84,6 +85,7 @@ public class BackgroundActivity extends Activity {
 		//Set up the view since count down hasn't started
 		if( startedCountdown == false )
 		{
+			smiley.setVisibility(ImageView.INVISIBLE);
 			progBar.setVisibility(ProgressBar.INVISIBLE);
 			count.setVisibility(TextView.INVISIBLE);
 			dismissText.setVisibility(TextView.VISIBLE);
@@ -92,6 +94,7 @@ public class BackgroundActivity extends Activity {
 			TextView textView = (TextView) findViewById(R.id.phrase_msg);
 			if(textView != null)
 				textView.setText(currPhrase);
+			textView.setShadowLayer(4, 2, 2, Color.GRAY); //shadow
 			isShowing = true;
 		}
 
@@ -118,11 +121,8 @@ public class BackgroundActivity extends Activity {
 
 
 				startedCountdown = true;
-				progBar.setVisibility(ProgressBar.VISIBLE);
-				AlphaAnimation alpha = new AlphaAnimation(0.5F, 0.5F);
-				alpha.setDuration(0); // Make animation instant
-				alpha.setFillAfter(true); // Tell it to persist after the animation ends
-				progBar.startAnimation(alpha);
+				progBar.setAlpha(0.2f);
+				//progBar.setVisibility(ProgressBar.VISIBLE); //comes across like we're waiting, but we should be relaxed instead
 				
 				count.setVisibility(TextView.VISIBLE);
 				dismissText.setVisibility(TextView.INVISIBLE);
@@ -138,9 +138,8 @@ public class BackgroundActivity extends Activity {
 						progBar.setProgress(mProgressStatus);
 						String progressStr = "" + mProgressStatus;
 						if(mProgressStatus <= 1){
-							progressStr = "&#9786"; //smiley face
-							count.setText(Html.fromHtml(progressStr));
-							alpha = 255.0f;
+							smiley.setVisibility(ImageView.VISIBLE); //show a smiley face
+							alpha = 255.0f;//hide the numbers
 						} else {
 							alpha = 255.0f - ((float) mProgressStatus - ((float)millisUntilFinished/1000.0f) + 0.5f) * 255.0f;
 							count.setText(progressStr);

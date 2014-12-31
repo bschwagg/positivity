@@ -79,6 +79,7 @@ public class SocialFragment extends Fragment {
 		Animation fadeIn = new AlphaAnimation(0, 1);
 	    fadeIn.setDuration(1500);
 		TextView t = (TextView)rootView.findViewById(R.id.text_leaderboard);
+		t.setShadowLayer(3, 1, 1, Color.BLACK); //shadow
 		RotateAnimation ranim = (RotateAnimation)AnimationUtils.loadAnimation(act, R.anim.text_rotate);
 		ranim.setFillAfter(true); //For the textview to remain at the same place after the rotation
 		AnimationSet animationSet = new AnimationSet(true);
