@@ -50,7 +50,7 @@ public class MainApplication extends Application {
 
 		ParseUser.enableAutomaticUser();
 		//ParseInstallation.getCurrentInstallation().saveInBackground(); //lets PUSH requests go through
-		//ParseUser.getCurrentUser().saveInBackground(); 
+		ParseUser.getCurrentUser().saveInBackground(); //fixes updating Parse objects. otherwise may crash 
 		ParsePush.subscribeInBackground("", new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
