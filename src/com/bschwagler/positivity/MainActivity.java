@@ -306,6 +306,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	 * This is the receiver to handle alarm events and update whatever widgets required
 	 */
 	private void setupAlarmReceiver() {
+		 IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+	        filter.addAction(Intent.ACTION_SCREEN_OFF);
+	        filter.addAction(Intent.ACTION_USER_PRESENT);
+	        BroadcastReceiver mReceiver = new BroadcastEventsReceiver();
+	        registerReceiver(mReceiver, filter);
 	}
 
 

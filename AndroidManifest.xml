@@ -70,13 +70,15 @@
         </activity>
 
         <!-- Generic broadcast receiver to monitor events -->
+        <!--  Created dynamically
         <receiver android:name=".BroadcastEventsReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="android.intent.action.SCREEN_OFF" />
             </intent-filter>
         </receiver>
-
+		-->
+	
         <!-- Register the receiver for the Alarm events -->
         <receiver android:name=".AlarmReceiver" >
         </receiver>

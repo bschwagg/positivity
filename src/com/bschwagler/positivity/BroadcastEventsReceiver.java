@@ -86,6 +86,7 @@ public class BroadcastEventsReceiver extends BroadcastReceiver {
 		AlarmManager am = (AlarmManager)(c.getSystemService( Context.ALARM_SERVICE ));
 		am.cancel(pi); //cancel old one if it still exists
 		am.set( AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + seconds*60*1000 /*ms*/, pi );
+		Log.d("alarm", "setting timer alarm for " + seconds);
 	}
 	
 	private void cancelAlarm(Context c)
@@ -94,7 +95,7 @@ public class BroadcastEventsReceiver extends BroadcastReceiver {
 		PendingIntent pi = PendingIntent.getBroadcast( c, ONE_SHOT_ALARM_ID, broadcast_intent, 0 );
 		AlarmManager am = (AlarmManager)(c.getSystemService( Context.ALARM_SERVICE ));
 		am.cancel(pi);
-	
+		Log.d("alarm", "canceling alarm");
 	}
 
 }
