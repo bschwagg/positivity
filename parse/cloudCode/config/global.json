@@ -1,0 +1,11 @@
+{
+    "applications": {
+        "_default": {
+            "link": "positivity"
+        }, 
+        "positivity": {
+            "applicationId": "EYc7GORw58kM2wMByUVqBYR9uPulnCKXIsfDYEmB", 
+            "masterKey": "JXYmpkWnkOk5iIGhbUizJnqqyOlAPWeyiYAeHSfJ"
+        }
+    }
+}
