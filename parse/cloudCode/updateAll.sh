@@ -1,0 +1,1 @@
+curl -X POST -H "X-Parse-Application-Id: EYc7GORw58kM2wMByUVqBYR9uPulnCKXIsfDYEmB" -H "X-Parse-REST-API-Key: 8yHiv0M6llaSCiku7iEOs8pADQD7ogLDSHlnhmTN" -H "Content-Type: application/json"  -d '{}' https://api.parse.com/1/functions/updateAll
