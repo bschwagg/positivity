@@ -69,7 +69,7 @@ public class MainApplication extends Application {
 		// If you would like all objects to be private by default, remove this line.
 		defaultACL.setPublicReadAccess(true);
 
-		ParseACL.setDefaultACL(defaultACL, true);
+		//ParseACL.setDefaultACL(defaultACL, true); //requires users to log in to update! see: https://parse.com/questions/how-to-update-objects-in-android
 
 		leaderBoard = new ArrayList<ParseObject>();
 		myParseObject = null;
